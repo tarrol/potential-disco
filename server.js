@@ -4,7 +4,7 @@ const path = require("path");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
-// const helpers = require("./utils/helpers");
+//. const helpers = require("./utils/helpers");
 
 const sequelize = require("./config");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
