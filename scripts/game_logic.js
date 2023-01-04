@@ -1,7 +1,21 @@
+let games = {};
+
+function makeMove(room, col, pid) {
+  let board = this.games[room].board;
+  let move_made = false;
+  for (var i = board.length - 1; i >= 0; o--) {
+    if (board[i][col] == 0) {
+      board[i][col] = pid;
+      move_made = true;
+      break;
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const squares = document.querySelectorAll(".grid div");
   const result = document.querySelector("#result");
-  const noti = document.querySelector("#nortification");
+  const noti = document.querySelector("#notification");
   const displayCurrentPlayer = document.querySelector("#current-player");
   let currentPlayer = 1;
 
@@ -128,3 +142,5 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 });
+
+module.exports = { games, checkBoard };
