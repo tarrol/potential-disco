@@ -27,6 +27,15 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    winCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     hooks: {
