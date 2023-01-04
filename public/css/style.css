@@ -1,23 +1,36 @@
-.grid {
-  border: 1px solid;
-  background-color: aliceblue;
-  height: 120px;
-  width: 140px;
+body {
+  text-align: center;
+}
+
+#board {
+  height: 540px;
+  width: 630px;
+  background-color: blue;
+  border: 10px solid navy;
+  
+  margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
 }
 
-.grid div {
-  height: 20px;
-  width: 20px;
+.tile {
+  height: 70px;
+  width: 70px;
+  margin: 5px;
+
+  /* Circle */
+  background-color: white;
+  border-radius: 50%;
+  border: 5px solid navy;
+
 }
 
-.player-one {
+
+/* Player Colors Tiles */
+.red-piece {
+  background-color: red;
+}
+
+.yellow-piece {
   background-color: yellow;
-  border-radius: 10px;
-}
-
-.player-two {
-  background-color: blue;
-  border-radius: 10px;
 }
