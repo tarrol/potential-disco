@@ -1,6 +1,7 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const game_logic = require("../scripts/game_logic");
 
 const app = express();
 const httpServer = createServer(app);
@@ -50,7 +51,7 @@ io.sockets.on("connection", (socket) => {
   socket.on("join", (data) => {
     // if there is already a room with player 1
     if (data.room in game_logic.games) {
-      let game = game_log.games[data.room];
+      let game = game_logic.games[data.room];
       // if there is already player 2 of that room
       if (typeof game.player2 != "undefined") {
         return;
@@ -97,7 +98,12 @@ io.sockets.on("connection", (socket) => {
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
     }
 
-    // socket.on("move", (data) => {});
+    socket.on("makeMove", (data) => {
+      let game = game_logic.games[socket.room];
+      if ((data.hash = socket.hash && game.turn == socket.pid)) {
+        var move_made = game_logic.make_move(socket.room, cata.co1, socket.pid);
+      }
+    });
   });
 
   socket.on("disconnect", () => {
