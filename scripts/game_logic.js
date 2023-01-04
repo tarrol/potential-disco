@@ -124,5 +124,7 @@ function setWinner(r, c) {
     } else {
         winner.innerText = "Yellow Wins";
     }
+    let btnDiv = document.getElementById('button');
+    btnDiv.append(document.createElement('button'));
     gameOver = true;
 }

@@ -34,3 +34,10 @@ body {
 .yellow-piece {
   background-color: yellow;
 }
+
+button {
+  width: 200px;
+  height: 40px;
+  margin-top: 30px;
+  border-radius: 20px;
+}
