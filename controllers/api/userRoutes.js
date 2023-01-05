@@ -66,7 +66,7 @@ router.post("/logout", (req, res) => {
   }
 });
 
-router.put('/:id', withAuth, async (req, res) => {
+router.put('/:id', withAuth , async (req, res) => {
   try {
     const [avatar] = await User.update(req.body.avatar, {
       where: {
@@ -74,8 +74,18 @@ router.put('/:id', withAuth, async (req, res) => {
       },
     });
 
+
+    if (!avatar) {
+      res.status(200).end();
+    } else {
+      res.json({ message: "Successfully updated avatar." });
+      return;
+    }
+
+
   } catch (err) {
     res.status(400).json(err);
+   
   }
 })
 
