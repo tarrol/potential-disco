@@ -26,7 +26,7 @@ router.get("/signup", (req, res) => {
 });
 
 // high score page for only when user is logged in.
-router.get("/highscore", withAuth, async (req, res) => {
+router.get("/highscore", async (req, res) => {
   try {
     res.render("highscores");
   } catch (err) {
