@@ -98,10 +98,19 @@ io.sockets.on("connection", (socket) => {
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
     }
 
-    socket.on("makeMove", (data) => {
+    socket.on("setPiece", (data) => {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        var move_made = game_logic.make_move(socket.room, cata.co1, socket.pid);
+        var move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
+        if (move_made) {
+          game.moves = parseInt(game.moves) + 1;
+          socket.broadcast
+            .to(socket.room)
+            .emit("move_made", { pid: socket.pid, col: data.col });
+            game.turn = socket.opponent.pid;
+            let winner = game_logic.checkWinner(game.board);
+            if(winner)
+        }
       }
     });
   });

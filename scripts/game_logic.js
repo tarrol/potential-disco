@@ -1,17 +1,17 @@
 <<<<<<< HEAD
 let games = {};
 
-function makeMove(room, col, pid) {
-  let board = this.games[room].board;
-  let move_made = false;
-  for (var i = board.length - 1; i >= 0; o--) {
-    if (board[i][col] == 0) {
-      board[i][col] = pid;
-      move_made = true;
-      break;
-    }
-  }
-}
+// function makeMove(room, col, pid) {
+//   let board = this.games[room].board;
+//   let move_made = false;
+//   for (var i = board.length - 1; i >= 0; o--) {
+//     if (board[i][col] == 0) {
+//       board[i][col] = pid;
+//       move_made = true;
+//       break;
+//     }
+//   }
+// }
 var playerRed = "R";
 var playerYellow = "Y";
 var currPlayer = playerRed;
@@ -48,11 +48,13 @@ function setGame() {
   }
 }
 
-function setPiece() {
+function setPiece(room, col, pid) {
   if (gameOver) {
     return;
   }
 
+  // set move_made false
+  let move_made = false;
   //get coords of that tile clicked
   let coords = this.id.split("-");
   let r = parseInt(coords[0]);
@@ -78,6 +80,9 @@ function setPiece() {
 
   r -= 1; //update the row height for that column
   currColumns[c] = r; //update the array
+
+  // set move_made true
+  move_made = true;
 
   checkWinner();
 }
@@ -157,4 +162,5 @@ function setWinner(r, c) {
   }
   gameOver = true;
 }
->>>>>>> 75188d1 (switched game logic to check win codition with coordinates | cleaned up code)
+
+module.exports = { games, setPiece };
