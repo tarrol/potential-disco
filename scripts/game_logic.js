@@ -1,22 +1,30 @@
-<<<<<<< HEAD
 let games = {};
 
+// function makeMove(room, col, pid) {
+//   let board = this.games[room].board;
+//   let move_made = false;
+//   for (var i = board.length - 1; i >= 0; o--) {
+//     if (board[i][col] == 0) {
+//       board[i][col] = pid;
+//       move_made = true;
+//       break;
+//     }
+//   }
+// }
+var playerRed = "R";
+var playerYellow = "Y";
+var currPlayer = playerRed;
 
-let playerRed = "R";
-let playerYellow = "Y";
-let currPlayer = playerRed;
+var gameOver = false;
+var board;
 
-let gameOver = false;
-let board;
+var rows = 6;
+var columns = 7;
+var currColumns = []; //keeps track of which row each column is at.
 
-let rows = 6;
-let columns = 7;
-let currColumns = []; //keeps track of which row each column is at.
-
-// $(document).ready(function () {
-//   setGame();
-// };
-// )
+window.onload = function () {
+  setGame();
+};
 
 function setGame() {
   board = [];
