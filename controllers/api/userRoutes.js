@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const { User } = require("../../models");
+const withAuth = require("../../utils/auth");
+
+//const findAvatar = require("../../scripts/avatar");
 
 router.post("/", async (req, res) => {
   try {
@@ -62,5 +65,30 @@ router.post("/logout", (req, res) => {
     res.status(404).end();
   }
 });
+
+router.put('/:id', withAuth , async (req, res) => {
+  try {
+    const [avatar] = await User.update(req.body.avatar, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+
+    if (!avatar) {
+      res.status(200).end();
+    } else {
+      res.json({ message: "Successfully updated avatar." });
+      return;
+    }
+
+
+  } catch (err) {
+    res.status(400).json(err);
+   
+  }
+})
+
+router.put("/:id", withAuth, (req, res) => {});
 
 module.exports = router;
