@@ -1,46 +1,54 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const game_logic = require("../scripts/game_logic");
+const game_logic = require("./scripts/game_logic");
+
+require("dotenv").config();
+
+const path = require("path");
+const session = require("express-session");
+const exphbs = require("express-handlebars");
+// const helpers = require("./utils/helpers");
+
+const sequelize = require("./config");
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const app = express();
 const httpServer = createServer(app);
 
 const io = new Server(httpServer);
 
-// function tick() {}
-
 app.use(express.static("public"));
 
-// app.get("/", (req, res) => {
-//   res.send("Hello, world!");
-// });
+const sess = {
+  secret: "Super secret secret",
+  cookie: {
+    maxAge: 300000,
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  },
+  resave: false,
+  saveUninitialized: true,
+  store: new SequelizeStore({
+    db: sequelize,
+  }),
+};
 
-// app.get("/generate-room", (req, res) => {
-//   share = generateRoom(6);
-//   // res.render
-// });
-
-// app.get("/landingPage", (req, res) => {
-//   // res.render("landingPage");
-// });
-
-// app.get("/:room([A-Za-z0-9]{6})", function (req, res) {
-//   share = req.params.room;
-//   // res.render();
-// });
+app.use(session(sess));
 
 function generateRoom(length) {
-  var haystack =
+  let haystack =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  var room = "";
+  let room = "";
 
-  for (var i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     room += haystack.charAt(Math.floor(Math.random() * 62));
   }
 
   return room;
 }
+
 let games = {};
 let rooms = [];
 // let roomNo;
@@ -101,15 +109,15 @@ io.sockets.on("connection", (socket) => {
     socket.on("setPiece", (data) => {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        var move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
+        let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
         if (move_made) {
           game.moves = parseInt(game.moves) + 1;
           socket.broadcast
             .to(socket.room)
             .emit("move_made", { pid: socket.pid, col: data.col });
-            game.turn = socket.opponent.pid;
-            let winner = game_logic.checkWinner(game.board);
-            if(winner)
+          game.turn = socket.opponent.pid;
+          let winner = game_logic.checkWinner(game.board);
+          // if(winner)
         }
       }
     });
@@ -126,4 +134,11 @@ io.sockets.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(3001);
+// httpServer.listen(3001);
+
+sequelize
+  .sync()
+  .then(() =>
+    httpServer.listen(3001, () => console.log("App listening on port 3001"))
+  )
+  .catch((err) => console.error(err));
