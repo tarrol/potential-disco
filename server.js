@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
@@ -52,9 +52,9 @@ app.engine(
   })
 );
 
-const port = 3001;
-app.listen(port);
-console.log(`Listening to server: http://localhost:${port}`);
+// const port = 3001;
+// app.listen(port);
+// console.log(`Listening to server: http://localhost:${port}`);
 
 // Landing page
 app.get("/", (req, res) => {
