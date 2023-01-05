@@ -25,13 +25,13 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-// high score page for only when user is logged in
-// router.get("/highscore", withAuth, async (req, res) => {
-//   try {
-//     res.render("highscores");
-//   } catch (err) {
-//     res.redirect("login");
-//   }
-// });
+// high score page for only when user is logged in.
+router.get("/highscore", withAuth, async (req, res) => {
+  try {
+    res.render("highscores");
+  } catch (err) {
+    res.redirect("login");
+  }
+});
 
 module.exports = router;
