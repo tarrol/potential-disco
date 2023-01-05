@@ -17,3 +17,4 @@ function getRandomAvatar(length) {
 }
 
 getRandomAvatar(8);
+
