@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
+const bodyParser = require("body-parser");
 const exphbs = require("express-handlebars");
 // const helpers = require("./utils/helpers");
 
@@ -38,6 +39,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./controllers"));
+
+// Handlebars setting
+app.set("view engine", "hbs");
+app.engine(
+  "hbs",
+  exphbs.engine({
+    extname: "hbs",
+    defaultLayout: "index",
+    layoutsDir: __dirname + "/views/layouts",
+    partialsDir: __dirname + "/views/partials",
+  })
+);
+
+// const port = 3001;
+// app.listen(port);
+// console.log(`Listening to server: http://localhost:${port}`);
+
+// Landing page
+app.get("/", (req, res) => {
+  res.render("main");
+});
 
 sequelize
   .sync()
