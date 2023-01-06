@@ -1,4 +1,6 @@
 const avatarUrl = "https://avatars.dicebear.com/api/bottts/";
+const avatarUrlEnd = ".svg";
+const session = require('express-session')
 
 function getRandomAvatar(length) {
   let haystack =
@@ -15,5 +17,13 @@ function getRandomAvatar(length) {
   console.log(generatedAvatar);
   return generatedAvatar;
 }
+
+var image = new Image();
+image.src = req.session.avatarurl;
+
+document
+  .querySelector('#avatar-section')
+  .appendChild(image)
+  .addEventListener('submit', getRandomAvatar(8));
 
 module.exports = getRandomAvatar;
