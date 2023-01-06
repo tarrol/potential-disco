@@ -1,30 +1,20 @@
 let games = {};
 
-// function makeMove(room, col, pid) {
-//   let board = this.games[room].board;
-//   let move_made = false;
-//   for (var i = board.length - 1; i >= 0; o--) {
-//     if (board[i][col] == 0) {
-//       board[i][col] = pid;
-//       move_made = true;
-//       break;
-//     }
-//   }
-// }
-var playerRed = "R";
-var playerYellow = "Y";
-var currPlayer = playerRed;
-
-var gameOver = false;
-var board;
+let playerRed = "R";
+let playerYellow = "Y";
+let currPlayer = playerRed;
 
 var rows = 6;
 var columns = 7;
 var currColumns = []; //keeps track of which row each column is at.
 
-window.onload = function () {
-  setGame();
-};
+let rows = 6;
+let columns = 7;
+let currColumns = []; //keeps track of which row each column is at.
+
+// window.onload = function () {
+//   setGame();
+// };
 
 function setGame() {
   board = [];
@@ -46,13 +36,14 @@ function setGame() {
   }
 }
 
-function setPiece(room, col, pid) {
+function setPiece() {
   if (gameOver) {
     return;
   }
 
   // set move_made false
   let move_made = false;
+
   //get coords of that tile clicked
   let coords = this.id.split("-");
   let r = parseInt(coords[0]);
@@ -161,4 +152,4 @@ function setWinner(r, c) {
   gameOver = true;
 }
 
-module.exports = { games, setPiece };
+// module.exports = { games };
