@@ -27,13 +27,15 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-router.get("/game", withAuth, async (req, res) => {
-  try {
-    res.render("game");
-  } catch (err) {
-    res.redirect("/login");
-  }
-});
+// router.get("/game", withAuth, async (req, res) => {
+//   try {
+//     res.render("game", {
+//       layout: 'main'
+//     });
+//   } catch (err) {
+//     res.redirect("/login");
+//   }
+// });
 
 router.get("/leaderboard", async (req, res) => {
   try {
@@ -71,10 +73,34 @@ router.get("/play", withAuth, async (req, res) => {
 
 router.get("/:room([A-Za-z0-9]{6})", withAuth, async (req, res) => {
   try {
-    res.render("game");
+    res.render("game", {
+      layout: 'main'
+    });
   } catch (err) {
     console.log(err);
     // res.redirect("/login");
+  }
+});
+
+
+// *main-routes
+router.get('/main', withAuth, async(req, res) => {
+  try {
+    res.render('homepage', {
+      layout: 'main'
+    });
+  } catch(err) {
+    res.redirect('login');
+  }
+});
+
+router.get('/leaderboardAuth', withAuth, async (req, res) => {
+  try {
+    res.render('leaderboard', {
+      layout: 'main'
+    });
+  } catch(err) {
+    res.redirect('login');
   }
 });
 
