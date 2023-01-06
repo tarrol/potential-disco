@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:room([A-Za-z0-9]{6})", (req, res) => {
   try {
-    res.render("main");
+    res.render("homepage");
   } catch (err) {
     console.log(err);
     // res.redirect("/login");
