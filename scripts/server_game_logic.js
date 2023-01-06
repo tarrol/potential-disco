@@ -45,6 +45,7 @@ function setPiece() {
   let move_made = false;
 
   //get coords of that tile clicked
+  // console.log(this.id);
   let coords = this.id.split("-");
   let r = parseInt(coords[0]);
   let c = parseInt(coords[1]);
