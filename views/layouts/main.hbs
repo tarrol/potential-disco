@@ -1,0 +1,30 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/game_logic.js"></script>
+  </head>
+
+  <body class="flex-column min-100-vh">
+  <nav class="navbar">
+    <ul>
+      <li class="li-inline nav-item"><a href="/homepage">Home</a></li>
+      <li class="li-inline nav-item"><a href="/dashboard">Dashboard</a></li>
+      <li class="li-inline nav-item"><a href="/login">Login</a></li>
+      <li class="li-inline nav-item"><a href="/signup">Signup</a></li>
+    </ul>
+  </nav>
+  <header class="hero">
+    <h1 class="app-title"><a href="/">Connect 4 Game</a></h1>
+  </header>
+
+  <main class="col-auto">
+
+    {{> header}}
+    {{{ body }}}
+    {{> footer}}
+  </body>
+</html>
