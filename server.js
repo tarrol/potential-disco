@@ -45,6 +45,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", require("./controllers"));
 
 // Handlebars setting
+// app.engine("handlebars", hbs.engine);
 app.set("view engine", "hbs");
 app.engine(
   "hbs",
