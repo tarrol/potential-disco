@@ -14,6 +14,21 @@ let currColumns = [];
 //keeps track of which row each column is at.
 
 window.onload = function () {
+  document.body.onclick = function (e) {
+    // console.log("click");
+    e = window.event || e;
+    var targetDomObject = e.target || e.srcElement;
+
+    if (
+      targetDomObject &&
+      targetDomObject.classList &&
+      targetDomObject.classList.contains("tile")
+    ) {
+      let targetData = targetDomObject;
+      console.log(targetData);
+    }
+  };
+
   setGame();
 };
 

@@ -133,7 +133,7 @@ io.sockets.on("connection", (socket) => {
     socket.on("set_piece", (data) => {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
+        let move_made = game_logic.setPiece(tile);
         if (move_made) {
           game.moves = parseInt(game.moves) + 1;
           socket.broadcast
