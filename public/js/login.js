@@ -15,11 +15,12 @@ const loginFormHandler = async function (event) {
     headers: { "Content-Type": "application/json" },
   });
 
-  if (response.ok) {
-    document.location.replace("/dashboard");
-  } else {
-    alert("Failed to login");
-  }
+    if (response.ok) {
+        document.location.replace('/');
+        console.log('log in success')
+    } else {
+        alert('Failed to login');
+    }
 };
 
 document
