@@ -36,7 +36,7 @@ $(document).ready(function () {
     console.log("assign emitted");
     player.pid = data.pid;
     player.hash = data.hash;
-    console.log(player.pid, player.hash);
+    console.log("player id: ", player.pid, player.hash);
 
     if (player.pid == "1") {
       yc.addClass("red");

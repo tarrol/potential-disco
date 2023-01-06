@@ -68,11 +68,7 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("join", (data) => {
     console.log("user connected, user id:", socket.id);
-    // console.log("data.room", data.room);
     // if there is already a room with player 1
-    // if (data.room in game_logic.games) {
-    console.log("game_logic.games", game_logic.games);
-    // includes statement and in statement not working, keeps running else statement
     // if (data.room.includes(game_logic.games)) {
     if (data.room in game_logic.games) {
       let game = game_logic.games[data.room];
@@ -83,7 +79,9 @@ io.sockets.on("connection", (socket) => {
       // otherwise join room as player 2
       console.log("player 2 has logged on");
       socket.join(data.room);
+      // push updated room data into the rooms array list
       rooms.push(data.room);
+      // set player 2 pid
       socket.pid = 2;
       socket.hash = generateHash(8);
       game.player2 = socket;
@@ -91,19 +89,23 @@ io.sockets.on("connection", (socket) => {
       // sets opponents for player 1 and player 2
       socket.opponent = game.player1;
       game.player1.opponent = socket;
+      // sends signal to client side to set pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
 
       // begins game at turn 1
       game.turn = 1;
+      // don't think this works yet
       socket.broadcast.to(data.room).emit("game start");
     } else {
       // join new room as player 1
       console.log("player 1 has joined");
+      // if there are no rooms, create a new one
       if (rooms.indexOf(data.room) <= 0) {
         socket.join(data.room);
       }
-      // console.log("data.room", data.room);
+      // set socket room attribute (room id) to the response
       socket.room = data.room;
+      // set player 1 pid to 1
       socket.pid = 1;
       socket.hash = generateHash(8);
       // game logic begins
@@ -119,7 +121,9 @@ io.sockets.on("connection", (socket) => {
           [0, 0, 0, 0, 0, 0, 0],
         ],
       };
+      // push this room into the rooms array list
       rooms.push(data.room);
+      // sends signal to client side to assign pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
       console.log("assign called");
     }
@@ -151,16 +155,17 @@ io.sockets.on("connection", (socket) => {
     });
   });
 
-  // socket.on("disconnect", () => {
-  //   // if (socket.room in game_logic.games) {
-  //   if (socket.room.includes(game_logic.games)) {
-  //     delete game_logic.games[socket.room];
-  //     socket.send("stop");
-  //     console.log("room closed: " + socket.room);
-  //   } else {
-  //     console.log("disconnected");
-  //   }
-  // });
+  socket.on("disconnect", () => {
+    // if this room exists, delete the room from array
+    if (socket.room in game_logic.games) {
+      delete game_logic.games[socket.room];
+      // send signal to socket "stop" listener (on scripts.js)
+      socket.send("stop");
+      console.log("room closed: " + socket.room);
+    } else {
+      console.log("disconnected");
+    }
+  });
 });
 
 sequelize
