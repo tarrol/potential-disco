@@ -87,8 +87,12 @@ router.put('/:id', withAuth , async (req, res) => {
     res.status(400).json(err);
    
   }
-})
+});
 
-router.put("/:id", withAuth, (req, res) => {});
+router.put("/score/:id", withAuth, (req, res) => {
+  try {
+    const wins = await User.findByPk()
+  }
+});
 
 module.exports = router;
