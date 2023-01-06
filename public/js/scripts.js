@@ -64,11 +64,11 @@ $(document).ready(function () {
     }
 
     if (data.winner == player.pid) {
-      $(".prompt h2").value(text.prompt_h2_win);
-      $(".prompt p").value(text.prompt_p_win);
+      $(".prompt h2").val(text.prompt_h2_win);
+      $(".prompt p").val(text.prompt_p_win);
     } else {
-      $(".prompt h2").value(text.prompt_h2_lose);
-      $(".prompt p").value(text.prompt_p_lose);
+      $(".prompt h2").val(text.prompt_h2_lose);
+      $(".prompt p").val(text.prompt_p_lose);
     }
     // hide prompts after certain time for rest of prompts
   });
@@ -77,8 +77,8 @@ $(document).ready(function () {
     oc.removeClass("display");
     yc.removeClass("display");
     change_turn(false);
-    $(".prompt h2").value(text.prompt_h2_draw);
-    $(".prompt p").value(text.prompt_p_draw);
+    $(".prompt h2").val(text.prompt_h2_draw);
+    $(".prompt p").val(text.prompt_p_draw);
   });
 
   socket.on("start", (data) => {
@@ -125,10 +125,10 @@ $(document).ready(function () {
   const change_turn = (yt) => {
     if (yt) {
       your_turn = true;
-      $(".status").value(text.yt);
+      $(".status").val(text.yt);
     } else {
       your_turn = false;
-      $(".status").value(text.nyt);
+      $(".status").val(text.nyt);
     }
   };
 
