@@ -95,7 +95,7 @@ io.sockets.on("connection", (socket) => {
       // begins game at turn 1
       game.turn = 1;
       // don't think this works yet
-      socket.broadcast.to(data.room).emit("game start");
+      socket.broadcast.to(data.room).emit("start");
     } else {
       // join new room as player 1
       console.log("player 1 has joined");
