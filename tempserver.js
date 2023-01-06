@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const game_logic = require("./public/js/game_logic");
+const game_logic = require("./scripts/tempserver_game_logic");
 const generateHash = require("./utils/generateHash");
 
 const path = require("path");
@@ -101,9 +101,7 @@ io.sockets.on("connection", (socket) => {
     } else {
       // join new room as player 1
       console.log("player 1 has joined");
-
-      // socket.emit("set_piece", { room: data.room });
-
+      socket.emit("set_piece", { room: data.room });
       // if there are no rooms, create a new one
       if (rooms.indexOf(data.room) <= 0) {
         socket.join(data.room);
@@ -130,59 +128,35 @@ io.sockets.on("connection", (socket) => {
       rooms.push(data.room);
       // sends signal to client side to assign pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
-      // console.log("assign called");
+      console.log("assign called");
     }
 
-    // socket.on("set_piece", (data) => {
-    //   let game = game_logic.games[socket.room];
+    socket.on("set_piece", (data) => {
+      let game = game_logic.games[socket.room];
 
-    //   socket.emit("move_made");
+      socket.emit("move_made");
 
-    //   if ((data.hash = socket.hash && game.turn == socket.pid)) {
-    //   let move_made = game_logic.setPiece();
-    //   if (move_made) {
-    //     game.moves = parseInt(game.moves) + 1;
-    //     socket.broadcast.to(socket.room).emit("set_piece_test", {
-    //       pid: socket.pid,
-    //       target: data.targetDomObject,
-    //     });
-    //     game.turn = socket.opponent.pid;
-    //     let winner = game_logic.checkWinner(game.board);
-    //     if (winner) {
-    //       socket.send("winner");
-    //     }
-    //     if (game.moves >= 42) {
-    //       socket.send("draw");
-    //     }
-    //   }
-    //   }
-    // });
-
-    socket.on("makeMove", function (data) {
-      var game = game_logic.games[socket.room];
-      if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        var move_made = game_logic.make_move(socket.room, data.col, socket.pid);
-        if (move_made) {
-          game.moves = parseInt(game.moves) + 1;
-          socket.broadcast
-            .to(socket.room)
-            .emit("move_made", { pid: socket.pid, col: data.col });
-          game.turn = socket.opponent.pid;
-          var winner = game_logic.check_for_win(game.board);
-          if (winner) {
-            // io.to(socket.room).emit('winner', {winner: winner});
-            socket.send("winner", { winner: winner });
-          }
-          if (game.moves >= 42) {
-            // io.to(socket.room).emit('draw');
-            socket.send("draw");
-          }
-        }
-      }
+      // if ((data.hash = socket.hash && game.turn == socket.pid)) {
+      // let move_made = game_logic.setPiece();
+      // if (move_made) {
+      //   game.moves = parseInt(game.moves) + 1;
+      //   socket.broadcast.to(socket.room).emit("set_piece_test", {
+      //     pid: socket.pid,
+      //     target: data.targetDomObject,
+      //   });
+      //   game.turn = socket.opponent.pid;
+      //   let winner = game_logic.checkWinner(game.board);
+      //   if (winner) {
+      //     socket.send("winner");
+      //   }
+      //   if (game.moves >= 42) {
+      //     socket.send("draw");
+      //   }
+      // }
+      // }
     });
 
     socket.on("my_move", (data) => {
-      socket.broadcast.to(socket.room).emit("opponent_move", { col: data.col });
       // socket.broadcast.to(socket.room).emit("opponent_move");
       socket.broadcast("test");
     });

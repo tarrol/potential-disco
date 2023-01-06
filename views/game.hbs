@@ -1,9 +1,24 @@
-<main>
+<div class="game">
+		<div class="your_color"></div>
+		<div class="opponent_color"></div>
+		<div class="board">
+			<img src="img/board.svg" class="overlay">
+			<div class="cols">
+				<div class="col" id="col_1" data-in-col="0"></div>
+				<div class="col" id="col_2" data-in-col="0"></div>
+				<div class="col" id="col_3" data-in-col="0"></div>
+				<div class="col" id="col_4" data-in-col="0"></div>
+				<div class="col" id="col_5" data-in-col="0"></div>
+				<div class="col" id="col_6" data-in-col="0"></div>
+				<div class="col" id="col_7" data-in-col="0"></div>
+			</div>
+		</div>
+		<div class="status">Your turn!</div>
+	</div>
 
-  <section>
-    <h1>Connect 4</h1>
-    <h2 id="winner"></h2>
-    <div id="board"></div>
-  </section>
-  
-</main>
+	<div class="underlay hidden"></div>
+	<div class="popover hidden">
+		<h2>Waiting for opponent</h2>
+		<p>Give the url to a friend to play a game</p>
+		<input type="text" class="share_url" value="">
+	</div>
