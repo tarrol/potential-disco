@@ -1,235 +1,180 @@
-// const { setPiece } = require("./game_logic");
-
-$(document).ready(function () {
+$(function () {
   var socket = io.connect(),
-    player = {};
-  (yc = $("player1-color")), (oc = $("player2-color")), (your_turn = false);
-  url = window.location.href.split("/");
-  room = url[url.length - 1];
-  // room = 1234;
+    player = {},
+    yc = $(".your_color"),
+    oc = $(".opponent_color"),
+    your_turn = false,
+    url = window.location.href.split("/"),
+    room = url[url.length - 1];
 
-  // some example prompts to display during turns
-  let text = {
-    yt: "Your Turn",
+  var text = {
+    yt: "Your turn",
     nyt: "Waiting for opponent",
-    prompt_h2: "Waiting for opponent",
-    prompt_p: "Give the url to a friend to play a game",
-    prompt_h2_win: "You won the game!",
-    prompt_p_win: "Give the url to a friend to play a game",
-    prompt_h2_lose: "You lost the game!",
-    prompt_p_lose: "Give the url to a friend to play another game",
-    prompt_h2_draw: "Its a draw, you're both losers..",
-    prompt_p_draw: "Give the url to a friend to play another game",
-  };
-
-  const init = () => {
-    socket.emit("join", { room: room });
-    $(".prompt input").html(window.location.href);
-    $(".prompt h2").html(text.prompt_h2);
-    $(".prompt p").html(text.prompt_p);
-    $(".status").html("");
+    popover_h2: "Waiting for opponent",
+    popover_p: "Give the url to a friend to play a game",
+    popover_h2_win: "You won the game!",
+    popover_p_win: "Give the url to a friend to play another game",
+    popover_h2_lose: "You lost the game..",
+    popover_p_lose: "Give the url to a friend to play another game",
+    popover_h2_draw: "Its a draw.. bummer!",
+    popover_p_draw: "Give the url to a friend to play another game",
   };
 
   init();
 
-  socket.on("assign", (data) => {
-    console.log("assign emitted");
+  socket.on("assign", function (data) {
     player.pid = data.pid;
     player.hash = data.hash;
-    console.log("player id: ", player.pid, player.hash);
-
     if (player.pid == "1") {
       yc.addClass("red");
       oc.addClass("yellow");
       player.color = "red";
-      player.opponent = "yellow";
-
-      $(".prompt").removeClass("hidden");
+      player.oponend = "yellow";
+      $(".underlay").removeClass("hidden");
+      $(".popover").removeClass("hidden");
     } else {
       $(".status").html(text.nyt);
       yc.addClass("yellow");
       oc.addClass("red");
-      oc.addClass("display");
+      oc.addClass("show");
       player.color = "yellow";
-      player.opponent = "red";
+      player.oponend = "red";
     }
   });
 
-  socket.on("winner", (data) => {
-    oc.removeClass("display");
-    yc.removeClass("display");
+  socket.on("winner", function (data) {
+    oc.removeClass("show");
+    yc.removeClass("show");
     change_turn(false);
     for (var i = 0; i < 4; i++) {
-      // highlight the winning set of 4
+      $(".cols .col .coin#coin_" + data.winner.winner_coins[i]).addClass(
+        "winner_coin"
+      );
     }
 
-    if (data.winner == player.pid) {
-      $(".prompt h2").val(text.prompt_h2_win);
-      $(".prompt p").val(text.prompt_p_win);
+    if (data.winner.winner == player.pid) {
+      $(".popover h2").html(text.popover_h2_win);
+      $(".popover p").html(text.popover_p_win);
     } else {
-      $(".prompt h2").val(text.prompt_h2_lose);
-      $(".prompt p").val(text.prompt_p_lose);
+      $(".popover h2").html(text.popover_h2_lose);
+      $(".popover p").html(text.popover_p_lose);
     }
-    // hide prompts after certain time for rest of prompts
+
+    setTimeout(function () {
+      $(".underlay").removeClass("hidden");
+      $(".popover").removeClass("hidden");
+    }, 2000);
   });
 
-  socket.on("draw", () => {
-    oc.removeClass("display");
-    yc.removeClass("display");
+  socket.on("draw", function () {
+    oc.removeClass("show");
+    yc.removeClass("show");
     change_turn(false);
-    $(".prompt h2").val(text.prompt_h2_draw);
-    $(".prompt p").val(text.prompt_p_draw);
+    $(".popover h2").html(text.popover_h2_draw);
+    $(".popover p").html(text.popover_p_draw);
+    setTimeout(function () {
+      $(".underlay").removeClass("hidden");
+      $(".popover").removeClass("hidden");
+    }, 2000);
   });
 
-  socket.on("start", (data) => {
+  socket.on("start", function (data) {
     change_turn(true);
-    yc.addClass("display");
-    oc.addClass("display");
-    $(".prompt").addClass("hidden");
+    yc.addClass("show");
+    $(".underlay").addClass("hidden");
+    $(".popover").addClass("hidden");
   });
 
-  socket.on("stop", (data) => {
+  socket.on("stop", function (data) {
     init();
     reset_board();
   });
 
-  // socket.on("move_made", (data) => {
-  //   console.log("move_made called");
-  //   setPiece();
-  //   change_turn(true);
-  //   // yc.addClass("display");
-  //   // oc.removeClass("display");
-  // });
-
-  socket.on("opponent_move", (data) => {
-    if (!your_turn) {
-      // not finished yet
-    }
-    console.log(data);
-  });
-
-  // data is undefined here
   socket.on("move_made", function (data) {
-    console.log("move_made", data);
-    // setPiece(data);
+    make_move(data.col + 1, true);
+    change_turn(true);
+    yc.addClass("show");
+    oc.removeClass("show");
   });
 
-  //
-  // const make_move = (col) => {};
-
-  $(".tile").click(() => {
-    console.log("tile clicked");
-    setPiece(this);
-    socket.emit("set_piece");
-    change_turn(false);
-  });
-
-  // add event handlers for clicking on tiles, give tiles css class names
-
-  const change_turn = (yt) => {
-    if (yt) {
-      your_turn = true;
-      $(".status").val(text.yt);
-    } else {
-      your_turn = false;
-      $(".status").val(text.nyt);
+  socket.on("opponent_move", function (data) {
+    if (!your_turn) {
+      oc.css("left", parseInt(data.col) * 100);
     }
-  };
-
-  $(".prompt input").click(() => {
-    $(this).select();
+    console.debug(data);
   });
 
-  const reset_board = () => {
-    board = [];
+  $(".cols > .col").mouseenter(function () {
+    if (your_turn) {
+      yc.css("left", $(this).index() * 100);
+      socket.emit("my_move", { col: $(this).index() });
+    }
+  });
+
+  $(".cols > .col").click(function () {
+    if (parseInt($(this).attr("data-in-col")) < 6) {
+      if (your_turn) {
+        var col = $(this).index() + 1;
+        make_move(col);
+        socket.emit("makeMove", { col: col - 1, hash: player.hash });
+        change_turn(false);
+        yc.removeClass("show");
+        oc.addClass("show");
+      }
+    }
+  });
+
+  function make_move(col, other) {
+    if (!other) other = false;
+    var col_elm = $(".cols > .col#col_" + col);
+    var current_in_col = parseInt(col_elm.attr("data-in-col"));
+    col_elm.attr("data-in-col", current_in_col + 1);
+    var color = other ? player.oponend : player.color;
+    var new_coin = $(
+      '<div class="coin ' +
+        color +
+        '" id="coin_' +
+        (5 - current_in_col) +
+        "" +
+        (col - 1) +
+        '"></div>'
+    );
+    col_elm.append(new_coin);
+    new_coin.animate(
+      {
+        top: 100 * (4 - current_in_col + 1),
+      },
+      400
+    );
+  }
+
+  function init() {
+    socket.emit("join", { room: room });
+    $(".popover input").val(window.location.href);
+    $(".popover h2").html(text.popover_h2);
+    $(".popover p").html(text.popover_p);
+    $(".status").html("");
+  }
+
+  function reset_board() {
+    $(".cols .col").attr("data-in-col", "0").html("");
     yc.removeClass("yellow red");
     oc.removeClass("yellow red");
-    yc.removeClass("display");
-    oc.removeClass("display");
-  };
+    yc.removeClass("show");
+    oc.removeClass("show");
+  }
 
-  // function setPiece() {
-  //   if (gameOver) {
-  //     return;
-  //   }
+  function change_turn(yt) {
+    if (yt) {
+      your_turn = true;
+      $(".status").html(text.yt);
+    } else {
+      your_turn = false;
+      $(".status").html(text.nyt);
+    }
+  }
 
-  //   socket.emit("set_piece");
-  //   console.log("set_piece emitted");
-
-  //   // set move_made false
-  //   let move_made = false;
-
-  //   //get coords of that tile clicked
-  //   let coords = this.id.split("-");
-  //   let coords = this.id;
-  //   let r = parseInt(coords[0]);
-  //   let c = parseInt(coords[1]);
-
-  //   // figure out which row the current column should be on
-  //   r = currColumns[c];
-
-  //   if (r < 0) {
-  //     // board[r][c] != ' '
-  //     return;
-  //   }
-
-  //   board[r][c] = currPlayer; //update JS board
-  //   let tile = document.getElementById(r.toString() + "-" + c.toString());
-  //   if (currPlayer == playerRed) {
-  //     tile.classList.add("red-piece");
-  //     currPlayer = playerYellow;
-  //   } else {
-  //     tile.classList.add("yellow-piece");
-  //     currPlayer = playerRed;
-  //   }
-
-  //   r -= 1; //update the row height for that column
-  //   currColumns[c] = r; //update the array
-
-  //   // set move_made true
-  //   move_made = true;
-
-  //   checkWinner();
-  // }
-
-  // function setGame() {
-  //   board = [];
-  //   currColumns = [5, 5, 5, 5, 5, 5, 5];
-
-  //   for (let r = 0; r < rows; r++) {
-  //     let row = [];
-  //     for (let c = 0; c < columns; c++) {
-  //       // JS
-  //       row.push(" ");
-  //       // HTML
-  //       let tile = document.createElement("div");
-  //       tile.id = r.toString() + "-" + c.toString();
-  //       tile.classList.add("tile");
-  //       tile.addEventListener("click", setPiece);
-  //       document.getElementById("board").append(tile);
-  //     }
-  //     board.push(row);
-  //   }
-  // }
-  window.onload = function () {
-    document.body.onclick = function (e) {
-      console.log("click");
-      console.log(targetDomObject);
-
-      e = window.event || e;
-      var targetDomObject = e.target || e.srcElement;
-
-      if (
-        targetDomObject &&
-        targetDomObject.classList &&
-        targetDomObject.classList.contains("tile")
-      ) {
-        let targetData = targetDomObject;
-        console.log(targetData);
-      }
-      socket.emit("set_piece");
-    };
-
-    setGame();
-  };
+  $(".popover input").click(function () {
+    $(this).select();
+  });
 });

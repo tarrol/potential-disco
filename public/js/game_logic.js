@@ -1,171 +1,115 @@
-let games = {};
-
-let playerRed = "R";
-let playerYellow = "Y";
-let currPlayer = playerRed;
-
-let gameOver = false;
-let board;
-
-let rows = 6;
-let columns = 7;
-let currColumns = [];
-
-//keeps track of which row each column is at.
-
-window.onload = function () {
-  document.body.onclick = function (e) {
-    // console.log("click");
-    e = window.event || e;
-    var targetDomObject = e.target || e.srcElement;
-
-    if (
-      targetDomObject &&
-      targetDomObject.classList &&
-      targetDomObject.classList.contains("tile")
-    ) {
-      let targetData = targetDomObject;
-      console.log(targetData);
+module.exports = {
+  games: {},
+  make_move: function (room, col, pid) {
+    var board = this.games[room].board;
+    var move_made = false;
+    for (var i = board.length - 1; i >= 0; i--) {
+      if (board[i][col] == 0) {
+        board[i][col] = pid;
+        move_made = true;
+        break;
+      }
     }
-  };
-  setGame();
+    return move_made;
+  },
+  check_for_win: function (board) {
+    var found = 0,
+      winner_coins = [],
+      winner = false,
+      data = {},
+      person = 0;
+    /*horizontal*/
+    for (var row = 0; row < board.length; row++) {
+      if (winner) break;
+      found = 0;
+      person = 0;
+      for (var col = 0; col < board[row].length; col++) {
+        var selected = board[row][col];
+        if (selected !== 0) found = person != selected ? 1 : found + 1;
+        person = selected;
+        if (found >= 4) {
+          winner = person;
+          for (var k = 0; k < 4; k++) {
+            winner_coins[k] = row + "" + (col - k);
+          }
+        }
+        if ((col > 2 && found == 0) || found >= 4) break;
+      }
+    }
+    /*vertical*/
+    if (!winner) {
+      for (col = 0; col < board[0].length; col++) {
+        if (winner) break;
+        found = 0;
+        person = 0;
+        for (row = 0; row < board.length; row++) {
+          var selected = board[row][col];
+          if (selected !== 0) found = person != selected ? 1 : found + 1;
+          person = selected;
+          if (found >= 4) {
+            winner = person;
+            for (var k = 0; k < 4; k++) {
+              winner_coins[k] = row - k + "" + col;
+            }
+          }
+          if ((row > 1 && found == 0) || found >= 4) break;
+        }
+      }
+    }
+    /*diagonal left-up->right*/
+    if (!winner) {
+      for (col = 0; col < board[0].length - 3; col++) {
+        if (winner) break;
+        for (row = 0; row < board.length - 3; row++) {
+          var first_val = board[row][col];
+          if (first_val == 0) continue;
+          if (
+            first_val === board[row + 1][col + 1] &&
+            first_val === board[row + 2][col + 2] &&
+            first_val === board[row + 3][col + 3]
+          ) {
+            winner = first_val;
+            winner_coins = [
+              row + "" + col,
+              row + 1 + "" + (col + 1),
+              row + 2 + "" + (col + 2),
+              row + 3 + "" + (col + 3),
+            ];
+            break;
+          }
+        }
+      }
+    }
+    /*diagonal right-up->left*/
+    if (!winner) {
+      for (col = board[0].length - 1; col > 2; col--) {
+        if (winner) break;
+        for (row = 0; row < board.length - 3; row++) {
+          var first_val = board[row][col];
+          if (first_val == 0) continue;
+          if (
+            first_val === board[row + 1][col - 1] &&
+            first_val === board[row + 2][col - 2] &&
+            first_val === board[row + 3][col - 3]
+          ) {
+            winner = first_val;
+            winner_coins = [
+              row + "" + col,
+              row + 1 + "" + (col - 1),
+              row + 2 + "" + (col - 2),
+              row + 3 + "" + (col - 3),
+            ];
+            break;
+          }
+        }
+      }
+    }
+
+    if (winner) {
+      data.winner = winner;
+      data.winner_coins = winner_coins;
+      return data;
+    }
+    return false;
+  },
 };
-
-function setGame() {
-  board = [];
-  currColumns = [5, 5, 5, 5, 5, 5, 5];
-
-  for (let r = 0; r < rows; r++) {
-    let row = [];
-    for (let c = 0; c < columns; c++) {
-      // JS
-      row.push(" ");
-      // HTML
-      let tile = document.createElement("div");
-      tile.id = r.toString() + "-" + c.toString();
-      tile.classList.add("tile");
-      tile.addEventListener("click", setPiece);
-      document.getElementById("board").append(tile);
-    }
-    board.push(row);
-  }
-}
-
-function setPiece() {
-  if (gameOver) {
-    return;
-  }
-
-  // set move_made false
-  let move_made = false;
-
-  //get coords of that tile clicked
-  let coords = this.id.split("-");
-  // console.log("what is this", this);
-  let r = parseInt(coords[0]);
-  let c = parseInt(coords[1]);
-
-  // figure out which row the current column should be on
-  r = currColumns[c];
-
-  if (r < 0) {
-    // board[r][c] != ' '
-    return;
-  }
-
-  board[r][c] = currPlayer; //update JS board
-  let tile = document.getElementById(r.toString() + "-" + c.toString());
-  if (currPlayer == playerRed) {
-    tile.classList.add("red-piece");
-    currPlayer = playerYellow;
-  } else {
-    tile.classList.add("yellow-piece");
-    currPlayer = playerRed;
-  }
-
-  r -= 1; //update the row height for that column
-  currColumns[c] = r; //update the array
-
-  // set move_made true
-  move_made = true;
-
-  checkWinner();
-}
-
-function checkWinner() {
-  // horizontal
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < columns - 3; c++) {
-      if (board[r][c] != " ") {
-        if (
-          board[r][c] == board[r][c + 1] &&
-          board[r][c + 1] == board[r][c + 2] &&
-          board[r][c + 2] == board[r][c + 3]
-        ) {
-          setWinner(r, c);
-          return;
-        }
-      }
-    }
-  }
-
-  // vertical
-  for (let c = 0; c < columns; c++) {
-    for (let r = 0; r < rows - 3; r++) {
-      if (board[r][c] != " ") {
-        if (
-          board[r][c] == board[r + 1][c] &&
-          board[r + 1][c] == board[r + 2][c] &&
-          board[r + 2][c] == board[r + 3][c]
-        ) {
-          setWinner(r, c);
-          return;
-        }
-      }
-    }
-  }
-
-  // anti diagonal
-  for (let r = 0; r < rows - 3; r++) {
-    for (let c = 0; c < columns - 3; c++) {
-      if (board[r][c] != " ") {
-        if (
-          board[r][c] == board[r + 1][c + 1] &&
-          board[r + 1][c + 1] == board[r + 2][c + 2] &&
-          board[r + 2][c + 2] == board[r + 3][c + 3]
-        ) {
-          setWinner(r, c);
-          return;
-        }
-      }
-    }
-  }
-
-  // diagonal
-  for (let r = 3; r < rows; r++) {
-    for (let c = 0; c < columns - 3; c++) {
-      if (board[r][c] != " ") {
-        if (
-          board[r][c] == board[r - 1][c + 1] &&
-          board[r - 1][c + 1] == board[r - 2][c + 2] &&
-          board[r - 2][c + 2] == board[r - 3][c + 3]
-        ) {
-          setWinner(r, c);
-          return;
-        }
-      }
-    }
-  }
-}
-
-function setWinner(r, c) {
-  let winner = document.getElementById("winner");
-  if (board[r][c] == playerRed) {
-    winner.innerText = "Red Wins";
-  } else {
-    winner.innerText = "Yellow Wins";
-  }
-  gameOver = true;
-}
-
-// module.exports = { games };
