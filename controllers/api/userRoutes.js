@@ -3,6 +3,18 @@ const { User } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 //const findAvatar = require("../../scripts/avatar");
+router.get('/me', (req, res) => {
+  // Find the logged in user based on the userId in the session
+  User.findByPk(req.session.user_id)
+    .then(user => {
+      // Send the user data as a response
+      res.json(user);
+    })
+    .catch(error => {
+      // If an error occurs, send a 500 status code with the error message
+      res.status(500).send(error.message);
+    });
+});
 
 router.post("/", async (req, res) => {
   try {
