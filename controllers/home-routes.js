@@ -35,13 +35,13 @@ router.get("/game", withAuth, async (req, res) => {
   }
 });
 
-router.get('/leaderboard', async (req,res) => {
-  try{
-    res.render('leaderboard');
+router.get("/leaderboard", async (req, res) => {
+  try {
+    res.render("leaderboard");
   } catch (err) {
-    res.redirect('/login');
+    res.redirect("/login");
   }
-})
+});
 
 // router.get("/play", withAuth, async (req, res) => {
 //   try {
@@ -60,7 +60,7 @@ router.get('/leaderboard', async (req,res) => {
 // });
 
 // test routes for connection, room id is generated from random hash
-router.get("/play", async (req, res) => {
+router.get("/play", withAuth, async (req, res) => {
   try {
     res.redirect("/" + generateHash(6));
   } catch (err) {
@@ -69,7 +69,7 @@ router.get("/play", async (req, res) => {
   }
 });
 
-router.get("/:room([A-Za-z0-9]{6})", (req, res) => {
+router.get("/:room([A-Za-z0-9]{6})", withAuth, (req, res) => {
   try {
     res.render("game");
   } catch (err) {
