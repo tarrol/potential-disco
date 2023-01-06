@@ -27,9 +27,9 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-router.get("/dashboard", async (req, res) => {
+router.get("/game", async (req, res) => {
   try {
-    res.render("dashboard");
+    res.render("game");
   } catch (err) {
     res.redirect("/login");
   }
