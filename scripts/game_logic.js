@@ -1,6 +1,5 @@
 let games = {};
 
-
 let playerRed = "R";
 let playerYellow = "Y";
 let currPlayer = playerRed;
@@ -12,10 +11,9 @@ let rows = 6;
 let columns = 7;
 let currColumns = []; //keeps track of which row each column is at.
 
-// $(document).ready(function () {
+// window.onload = function () {
 //   setGame();
 // };
-// )
 
 function setGame() {
   board = [];
@@ -37,13 +35,14 @@ function setGame() {
   }
 }
 
-function setPiece(room, col, pid) {
+function setPiece() {
   if (gameOver) {
     return;
   }
 
   // set move_made false
   let move_made = false;
+
   //get coords of that tile clicked
   let coords = this.id.split("-");
   let r = parseInt(coords[0]);
@@ -152,4 +151,4 @@ function setWinner(r, c) {
   gameOver = true;
 }
 
-module.exports = { games, setPiece };
+// module.exports = { games };

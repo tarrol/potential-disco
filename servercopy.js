@@ -63,13 +63,12 @@ app.engine(
 let rooms = [];
 
 io.sockets.on("connection", (socket) => {
-  // console.log("user connected, user id:", socket.id);
+  console.log("user connected, user id:", socket.id);
 
   socket.on("join", (data) => {
     console.log("user connected, user id:", socket.id);
     // if there is already a room with player 1
-    // if (data.room in game_logic.games) {
-    if (data.room.includes(game_logic.games)) {
+    if (data.room in game_logic.games) {
       let game = game_logic.games[data.room];
       // if there is already player 2 of that room
       if (typeof game.player2 != "undefined") {
@@ -101,23 +100,23 @@ io.sockets.on("connection", (socket) => {
       socket.pid = 1;
       socket.hash = generateHash(8);
       // game logic begins
-      // game_logic.games[data.room] = {
-      //   player1: socket,
-      //   moves: 0,
-      //   board: [
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //   ],
-      // };
+      game_logic.games[data.room] = {
+        player1: socket,
+        moves: 0,
+        board: [
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+        ],
+      };
       rooms.push(data.room);
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
     }
 
-    socket.on("set_piece", (data) => {
+    socket.on("setPiece", (data) => {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
         let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
@@ -144,16 +143,15 @@ io.sockets.on("connection", (socket) => {
     });
   });
 
-  // socket.on("disconnect", () => {
-  //   // if (socket.room in game_logic.games) {
-  //   if (socket.room.includes(game_logic.games)) {
-  //     delete game_logic.games[socket.room];
-  //     socket.send("stop");
-  //     console.log("room closed: " + socket.room);
-  //   } else {
-  //     console.log("disconnected");
-  //   }
-  // });
+  socket.on("disconnect", () => {
+    if (socket.room in game_logic.games) {
+      delete game_logic.games[socket.room];
+      socket.send("stop");
+      console.log("room closed: " + socket.room);
+    } else {
+      console.log("disconnected");
+    }
+  });
 });
 
 sequelize

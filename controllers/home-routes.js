@@ -1,15 +1,15 @@
 const router = require("express").Router();
 const { User } = require("../models/");
 const withAuth = require("../utils/auth");
-const { generateRoom } = require("../scripts/gen_room.js");
+const generateHash = require("../utils/generateHash");
 
-router.get("/", async (req, res) => {
-  try {
-    res.render("main");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     res.render("main");
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 router.get("/login", (req, res) => {
   if (req.session.loggedIn) {
@@ -27,7 +27,6 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-
 router.get("/highscore", async (req, res) => {
   try {
     res.render("highscores");
@@ -36,19 +35,38 @@ router.get("/highscore", async (req, res) => {
   }
 });
 
-router.get("/play", withAuth, async (req, res) => {
+// router.get("/play", withAuth, async (req, res) => {
+//   try {
+//     window.location.replace("/" + generateHash(6));
+//   } catch (err) {
+//     res.redirect("/login");
+//   }
+// });
+
+// router.get("/play/:room([A-Za-z0-9]{6})", withAuth, (req, res) => {
+//   try {
+//     res.render("index");
+//   } catch (err) {
+//     res.redirect("/login");
+//   }
+// });
+
+// test routes for connection, room id is generated from random hash
+router.get("/", async (req, res) => {
   try {
-    window.location.replace("/" + generateRoom(6));
+    res.redirect("/" + generateHash(6));
   } catch (err) {
-    res.redirect("/login");
+    console.log(err);
+    // res.redirect("/login");
   }
 });
 
-router.get("/play/:room([A-Za-z0-9]{6})", withAuth, (req, res) => {
+router.get("/:room([A-Za-z0-9]{6})", (req, res) => {
   try {
-    res.render("game");
+    res.render("main");
   } catch (err) {
-    res.redirect("/login");
+    console.log(err);
+    // res.redirect("/login");
   }
 });
 

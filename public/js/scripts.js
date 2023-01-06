@@ -1,10 +1,14 @@
+// const { setPiece } = require("./game_logic");
+
 $(document).ready(function () {
   let socket = io.connect(),
     player = {};
   (yc = $("player1-color")), (oc = $("player2-color")), (your_turn = false);
   url = window.location.href.split("/");
   room = url[url.length - 1];
+  // room = 1234;
 
+  // some example prompts to display during turns
   let text = {
     yt: "Your Turn",
     nyt: "Waiting for opponent",
@@ -16,6 +20,14 @@ $(document).ready(function () {
     prompt_p_lose: "Give the url to a friend to play another game",
     prompt_h2_draw: "Its a draw, you're both losers..",
     prompt_p_draw: "Give the url to a friend to play another game",
+  };
+
+  const init = () => {
+    socket.emit("join", { room: room });
+    $(".prompt input").html(window.location.href);
+    $(".prompt h2").html(text.prompt_h2);
+    $(".prompt p").html(text.prompt_p);
+    $(".status").html("");
   };
 
   init();
@@ -92,18 +104,20 @@ $(document).ready(function () {
     console.log(data);
   });
 
-  const init = () => {
-    socket.emit("join", { room: room });
-    $(".prompt input").value(window.location.href);
-    $(".prompt h2").html(text.prompt_h2);
-    $(".prompt p").html(text.prompt_p);
-    $(".status").html("");
-  };
-
   //
-  const make_move = (col) => {};
+  // const make_move = (col) => {};
 
-  // add event handlers for clicking on columns, give columns css class names
+  $("#tile").click((col) => {
+    if (your_turn) {
+      setPiece(col);
+      socket.emit("set_piece");
+      change_turn(false);
+      yc.addClass("display");
+      oc.addClass("show");
+    }
+  });
+
+  // add event handlers for clicking on tiles, give tiles css class names
 
   const change_turn = (yt) => {
     if (yt) {
