@@ -114,4 +114,14 @@ router.get("/leaderboardAuth", withAuth, async (req, res) => {
   }
 });
 
+router.get('/avatars', withAuth, async(req, res) => {
+  try {
+    res.render('avatar', {
+      layout: 'main'
+    });
+  } catch(err) {
+    res.redirect('login');
+  }
+});
+
 module.exports = router;
