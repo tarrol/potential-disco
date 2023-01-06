@@ -28,7 +28,6 @@ window.onload = function () {
       console.log(targetData);
     }
   };
-
   setGame();
 };
 
@@ -62,6 +61,7 @@ function setPiece() {
 
   //get coords of that tile clicked
   let coords = this.id.split("-");
+  // console.log("what is this", this);
   let r = parseInt(coords[0]);
   let c = parseInt(coords[1]);
 
