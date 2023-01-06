@@ -69,7 +69,7 @@ router.get("/play", withAuth, async (req, res) => {
   }
 });
 
-router.get("/:room([A-Za-z0-9]{6})", withAuth, (req, res) => {
+router.get("/:room([A-Za-z0-9]{6})", withAuth, async (req, res) => {
   try {
     res.render("game");
   } catch (err) {
