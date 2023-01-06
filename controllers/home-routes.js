@@ -27,13 +27,21 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-router.get("/game", async (req, res) => {
+router.get("/game", withAuth, async (req, res) => {
   try {
     res.render("game");
   } catch (err) {
     res.redirect("/login");
   }
 });
+
+router.get('/leaderboard', async (req,res) => {
+  try{
+    res.render('leaderboard');
+  } catch (err) {
+    res.redirect('/login');
+  }
+})
 
 // router.get("/play", withAuth, async (req, res) => {
 //   try {
