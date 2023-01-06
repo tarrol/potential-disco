@@ -56,6 +56,7 @@ app.engine(
   })
 );
 
+// commented out for testing socket connection
 // app.get("/", (req, res) => {
 //   res.render("main");
 // });
