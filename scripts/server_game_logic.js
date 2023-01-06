@@ -10,7 +10,8 @@ var currColumns = []; //keeps track of which row each column is at.
 
 let rows = 6;
 let columns = 7;
-let currColumns = []; //keeps track of which row each column is at.
+let currColumns = [];
+//keeps track of which row each column is at.
 
 // window.onload = function () {
 //   setGame();
