@@ -33,8 +33,11 @@ $(document).ready(function () {
   init();
 
   socket.on("assign", (data) => {
+    console.log("assign emitted");
     player.pid = data.pid;
     player.hash = data.hash;
+    console.log(player.pid, player.hash);
+
     if (player.pid == "1") {
       yc.addClass("red");
       oc.addClass("yellow");
@@ -43,7 +46,7 @@ $(document).ready(function () {
 
       $(".prompt").removeClass("hidden");
     } else {
-      $(".status").value(text.nyt);
+      $(".status").html(text.nyt);
       yc.addClass("yellow");
       oc.addClass("red");
       oc.addClass("display");
@@ -91,7 +94,7 @@ $(document).ready(function () {
   });
 
   socket.on("move_made", (data) => {
-    make_move(data.col + 1, true);
+    setPiece();
     change_turn(true);
     yc.addClass("display");
     oc.removeClass("display");
@@ -107,9 +110,9 @@ $(document).ready(function () {
   //
   // const make_move = (col) => {};
 
-  $("#tile").click((col) => {
+  $("#tile").click(() => {
     if (your_turn) {
-      setPiece(col);
+      setPiece();
       socket.emit("set_piece");
       change_turn(false);
       yc.addClass("display");

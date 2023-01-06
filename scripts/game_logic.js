@@ -152,4 +152,4 @@ function setWinner(r, c) {
   gameOver = true;
 }
 
-// module.exports = { games };
+module.exports = { games, setPiece, checkWinner, setWinner };
