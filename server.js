@@ -68,11 +68,15 @@ io.sockets.on("connection", (socket) => {
 
   socket.on("join", (data) => {
     console.log("user connected, user id:", socket.id);
+    // console.log("data.room", data.room);
     // if there is already a room with player 1
     // if (data.room in game_logic.games) {
-    if (data.room.includes(game_logic.games)) {
+    console.log("game_logic.games", game_logic.games);
+    // includes statement and in statement not working, keeps running else statement
+    // if (data.room.includes(game_logic.games)) {
+    if (data.room in game_logic.games) {
       let game = game_logic.games[data.room];
-      // if there is already player 2 of that room
+      // if there is already player 2 of that room, return
       if (typeof game.player2 != "undefined") {
         return;
       }
@@ -98,24 +102,26 @@ io.sockets.on("connection", (socket) => {
       if (rooms.indexOf(data.room) <= 0) {
         socket.join(data.room);
       }
+      // console.log("data.room", data.room);
       socket.room = data.room;
       socket.pid = 1;
       socket.hash = generateHash(8);
       // game logic begins
-      // game_logic.games[data.room] = {
-      //   player1: socket,
-      //   moves: 0,
-      //   board: [
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //     [0, 0, 0, 0, 0, 0, 0],
-      //   ],
-      // };
+      game_logic.games[data.room] = {
+        player1: socket,
+        moves: 0,
+        board: [
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0, 0, 0],
+        ],
+      };
       rooms.push(data.room);
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
+      console.log("assign called");
     }
 
     socket.on("set_piece", (data) => {
