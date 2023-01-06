@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const game_logic = require("./scripts/game_logic");
+const game_logic = require("./scripts/server_game_logic");
 const generateHash = require("./utils/generateHash");
 
 const path = require("path");
@@ -68,7 +68,8 @@ io.sockets.on("connection", (socket) => {
   // console.log("user connected, user id:", socket.id);
 
   socket.on("join", (data) => {
-    console.log("user connected, user id:", socket.id);
+    console.log("game_logic.games:", game_logic.games);
+    // console.log("user connected, user id:", socket.id);
     // if there is already a room with player 1
     // if (data.room.includes(game_logic.games)) {
     if (data.room in game_logic.games) {
@@ -132,7 +133,7 @@ io.sockets.on("connection", (socket) => {
     socket.on("set_piece", (data) => {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
+        let move_made = game_logic.setPiece(tile);
         if (move_made) {
           game.moves = parseInt(game.moves) + 1;
           socket.broadcast

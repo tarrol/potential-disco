@@ -12,18 +12,28 @@
   <nav class="navbar">
     <ul id="navig-bar">
       <li class="li-inline nav-item"><a href="/">Home</a></li>
-      <li class="li-inline nav-item"><a href="/dashboard">Dashboard</a></li>
+      <li class="li-inline nav-item"><a href="/leaderboard">Dashboard</a></li>
       <li class="li-inline nav-item"><a href="/login">Login</a></li>
       <li class="li-inline nav-item"><a href="/signup">Signup</a></li>
     </ul>
   </nav>
   <header class="hero">
-    <h1 class="app-title"><a href="/game">Connect 4 Game</a></h1>
+    <h1 class="app-title"><a href="/play">Connect 4 Game</a></h1>
   </header>
 
   {{{body}}}
 
   <main class="col-auto">
 
+ <script
+  src="https://code.jquery.com/jquery-3.6.3.min.js"
+  integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+</script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
+  <script src="/js/game_logic.js"></script>
   </body>
 </html>

@@ -3,13 +3,13 @@ const { User } = require("../models/");
 const withAuth = require("../utils/auth");
 const generateHash = require("../utils/generateHash");
 
-// router.get("/", async (req, res) => {
-//   try {
-//     res.render("main");
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+router.get("/", async (req, res) => {
+  try {
+    res.render("homepage");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 router.get("/login", (req, res) => {
   if (req.session.loggedIn) {
@@ -27,9 +27,17 @@ router.get("/signup", (req, res) => {
   res.render("signup");
 });
 
-router.get("/game", async (req, res) => {
+router.get("/game", withAuth, async (req, res) => {
   try {
     res.render("game");
+  } catch (err) {
+    res.redirect("/login");
+  }
+});
+
+router.get("/leaderboard", async (req, res) => {
+  try {
+    res.render("leaderboard");
   } catch (err) {
     res.redirect("/login");
   }
@@ -52,7 +60,7 @@ router.get("/game", async (req, res) => {
 // });
 
 // test routes for connection, room id is generated from random hash
-router.get("/", async (req, res) => {
+router.get("/play", withAuth, async (req, res) => {
   try {
     res.redirect("/" + generateHash(6));
   } catch (err) {
@@ -61,9 +69,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:room([A-Za-z0-9]{6})", (req, res) => {
+router.get("/:room([A-Za-z0-9]{6})", withAuth, async (req, res) => {
   try {
-    res.render("homepage");
+    res.render("game");
   } catch (err) {
     console.log(err);
     // res.redirect("/login");
