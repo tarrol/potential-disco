@@ -346,6 +346,7 @@ END NORMALIZE CSS
 
 body {
   text-align: center;
+  background-color: aqua;
 }
 
 #board {
@@ -379,6 +380,36 @@ body {
 
 .yellow-piece {
   background-color: yellow;
+<<<<<<< HEAD
+}
+
+/* leaderboard*/
+
+#container {
+	width: 600px;
+	height: auto;
+}
+
+.row {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 40px;
+	border-bottom: 1px solid #AFAFAF;
+}
+
+.name {
+	position: relative;
+	display: inline-block;
+	width: 75%;
+	line-height: 45px;
+}
+
+.score {
+	position: relative;
+	display: inline-block;
+	width: 25%;
+=======
 } 
 
 
@@ -403,4 +434,5 @@ nav{
 
 .nav-item > a{
   color:white;
+>>>>>>> a26e2e16438f8e6115fa7c13288ca68992f45d2b
 }
