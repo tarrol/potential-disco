@@ -9,7 +9,8 @@ let board;
 
 let rows = 6;
 let columns = 7;
-let currColumns = []; //keeps track of which row each column is at.
+let currColumns = [];
+//keeps track of which row each column is at.
 
 // window.onload = function () {
 //   setGame();
@@ -44,6 +45,7 @@ function setPiece() {
   let move_made = false;
 
   //get coords of that tile clicked
+  // console.log(this.id);
   let coords = this.id.split("-");
   let r = parseInt(coords[0]);
   let c = parseInt(coords[1]);

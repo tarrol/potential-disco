@@ -16,5 +16,4 @@ function getRandomAvatar(length) {
   return generatedAvatar;
 }
 
-getRandomAvatar(8);
-
+module.exports = getRandomAvatar;

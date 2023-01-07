@@ -56,7 +56,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logouts", (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
       res.status(204).end();
@@ -87,8 +87,12 @@ router.put('/:id', withAuth , async (req, res) => {
     res.status(400).json(err);
    
   }
-})
+});
 
-router.put("/:id", withAuth, (req, res) => {});
+// router.put("/score/:id", withAuth, (req, res) => {
+//   try {
+//     const wins = await User.findByPk()
+//   }
+// });
 
 module.exports = router;

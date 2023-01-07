@@ -9,9 +9,25 @@ let board;
 
 let rows = 6;
 let columns = 7;
-let currColumns = []; //keeps track of which row each column is at.
+let currColumns = [];
+
+//keeps track of which row each column is at.
 
 window.onload = function () {
+  document.body.onclick = function (e) {
+    // console.log("click");
+    e = window.event || e;
+    var targetDomObject = e.target || e.srcElement;
+
+    if (
+      targetDomObject &&
+      targetDomObject.classList &&
+      targetDomObject.classList.contains("tile")
+    ) {
+      let targetData = targetDomObject;
+      console.log(targetData);
+    }
+  };
   setGame();
 };
 
@@ -45,6 +61,7 @@ function setPiece() {
 
   //get coords of that tile clicked
   let coords = this.id.split("-");
+  // console.log("what is this", this);
   let r = parseInt(coords[0]);
   let c = parseInt(coords[1]);
 
