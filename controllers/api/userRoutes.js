@@ -87,7 +87,7 @@ router.put("/me", withAuth, async (req, res) => {
   try {
     const avatar = await User.update(req.body.avatar, {
       where: {
-        id: req.params.id,
+        id: req.session.user_id,
       },
     });
 
