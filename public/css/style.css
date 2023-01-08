@@ -404,10 +404,10 @@ body {
 	border-radius: 45px;
 }
 
-.red{
+.red-piece{
 	background: rgb(238, 17, 17);
 }
-.yellow{
+.yellow-piece{
 	background: rgb(255, 230, 0);
 }
 
@@ -507,6 +507,13 @@ img {
   position: relative;
   left: 100px;
   top: 40px;
+}
+
+#game-board {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
 }
 
 button {

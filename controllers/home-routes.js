@@ -82,17 +82,6 @@ router.get("/:room([A-Za-z0-9]{8})", withAuth, async (req, res) => {
   }
 });
 
-router.get("/:room([A-Za-z0-9]{10})", withAuth, async (req, res) => {
-  try {
-    res.render("game", {
-      layout: "main",
-    });
-  } catch (err) {
-    console.log(err);
-    // res.redirect("/login");
-  }
-});
-
 // *main-routes
 router.get("/main", withAuth, async (req, res) => {
   try {
