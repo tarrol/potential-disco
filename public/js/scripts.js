@@ -38,8 +38,10 @@ $(() => {
     change_turn(false);
     if (data.winner.winner == player.pid) {
       $(".status").html(text.win);
+      $("#play-button").text("Play Again");
     } else {
       $(".status").html(text.lose);
+      $("#play-button").text("Play Again");
     }
   });
 
