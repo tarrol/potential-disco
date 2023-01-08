@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const game_logic = require("./public/js/game_logic");
+const routes = require("./controllers");
 const generateHash = require("./utils/generateHash");
 
 const path = require("path");
@@ -35,26 +36,30 @@ const sess = {
     db: sequelize,
   }),
 };
-
 app.use(session(sess));
+
+const hbs = exphbs.create({});
+
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", require("./controllers"));
+app.use(routes);
 
 // Handlebars setting
-app.set("view engine", "hbs");
-app.engine(
-  "hbs",
-  exphbs.engine({
-    extname: "hbs",
-    defaultLayout: "index",
-    layoutsDir: __dirname + "/views/layouts",
-    partialsDir: __dirname + "/views/partials",
-  })
-);
+// app.engine(
+//   "hbs",
+//   exphbs.engine({
+//     extname: "hbs",
+//     defaultLayout: "index",
+//     layoutsDir: __dirname + "/views/layouts",
+//     partialsDir: __dirname + "/views/partials",
+//   })
+// );
+// app.set("view engine", "hbs");
 
 let rooms = [];
 
