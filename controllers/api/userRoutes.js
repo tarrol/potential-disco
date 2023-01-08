@@ -102,24 +102,38 @@ router.put("/me", withAuth, async (req, res) => {
   }
 })
 
-// add 1 to wincount using usermodel id number
+// route to increment user wincount by 1
 router.put("/:id", async (req, res) => {
   try {
     const userData = await User.increment(
       { win_count: 1 },
       {
         where: {
-          id: req.params.id,
+          id: req.session.user_id,
         },
       }
     );
-    res.json(userData);
+    res.sendStatus(200);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// get route for user by id
+// routes for testing
+// get your user info
+router.get("/user", async (req, res) => {
+  try {
+    const userData = await User.findOne({
+      where: {
+        id: req.session.user_id,
+      },
+    });
+    res.json(userData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+// get user info by id
 router.get("/:id", async (req, res) => {
   try {
     const userData = await User.findOne({

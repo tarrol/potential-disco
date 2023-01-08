@@ -131,13 +131,18 @@ $(() => {
   }
 
   // make a function to call wincount api route on win
-  // const myWin = async function () {
-  //   const response = await fetch("/api/users/:id", {});
+  const myWin = async function () {
+    const response = await fetch("/api/users/:id", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  //   if (response.ok) {
-  //     document.location.replace("/");
-  //   } else {
-  //     alert("Failed to login");
-  //   }
-  // };
+    if (response.ok) {
+      console.log("wincount incremented");
+    } else {
+      console.log("wincount call failed");
+    }
+  };
 });
