@@ -346,7 +346,6 @@ END NORMALIZE CSS
 
 body {
   text-align: center;
-  background-color: rgb(57, 1, 104);
 }
 
 .board{
@@ -365,7 +364,7 @@ body {
 .game{
 	position: relative;
 	width: 700px;
-	margin: 120px auto 0;
+	margin: auto auto 0;
 }
 
 .board .overlay{
