@@ -17,6 +17,7 @@ const loginFormHandler = async function (event) {
 
   if (response.ok) {
     document.location.replace("/");
+    console.log(current_win_count);
     console.log("log in success");
   } else {
     alert("Failed to login");
