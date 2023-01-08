@@ -16,7 +16,7 @@ const loginFormHandler = async function (event) {
     });
 
   if (response.ok) {
-    document.location.replace("/main");
+    document.location.replace("/");
     console.log("log in success");
   } else {
     alert("Failed to login");
