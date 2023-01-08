@@ -521,3 +521,11 @@ nav{
 .nav-item > a{
   color:white;
 }
+
+img {
+  height: 230px;
+  display: flex;
+  position: relative;
+  left: 100px;
+  top: 40px;
+}

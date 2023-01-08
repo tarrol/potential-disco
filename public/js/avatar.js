@@ -33,7 +33,6 @@ fetch('/api/users/me', {
     // Create an image element using the userData.avatar URL
     const avatarImg = document.createElement('img');
     avatarImg.src = userData.avatar;
-    console.log(userData);
 
     // Append the image to the body of the document
     document.querySelector('#avatar-section').appendChild(avatarImg);
