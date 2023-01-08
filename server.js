@@ -45,7 +45,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", require("./controllers"));
 
 // Handlebars setting
-// app.engine("handlebars", hbs.engine);
 app.set("view engine", "hbs");
 app.engine(
   "hbs",
@@ -57,21 +56,14 @@ app.engine(
   })
 );
 
-// commented out for testing socket connection
-// app.get("/", (req, res) => {
-//   res.render("main");
-// });
-
 let rooms = [];
 
 io.sockets.on("connection", (socket) => {
   // console.log("user connected, user id:", socket.id);
 
   socket.on("join", (data) => {
-    console.log("game_logic.games:", game_logic.games);
     // console.log("user connected, user id:", socket.id);
     // if there is already a room with player 1
-    // if (data.room.includes(game_logic.games)) {
     if (data.room in game_logic.games) {
       let game = game_logic.games[data.room];
       // if there is already player 2 of that room, return
@@ -83,8 +75,12 @@ io.sockets.on("connection", (socket) => {
       socket.join(data.room);
       // push updated room data into the rooms array list
       rooms.push(data.room);
+      // set socket.room attribute to callback room id in games array later
+      socket.room = data.room;
       // set player 2 pid
       socket.pid = 2;
+
+      // hash to track different players, socket.id isn't meant to be used in applications
       socket.hash = generateHash(8);
       game.player2 = socket;
 
@@ -94,17 +90,15 @@ io.sockets.on("connection", (socket) => {
       // sends signal to client side to set pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
 
-      // begins game at turn 1
+      // begins at turn 1
       game.turn = 1;
-      // don't think this works yet
       socket.broadcast.to(data.room).emit("start");
+      console.log(socket.hash);
     } else {
       // join new room as player 1
       console.log("player 1 has joined");
 
-      // socket.emit("set_piece", { room: data.room });
-
-      // if there are no rooms, create a new one
+      // if there are no rooms with the generated hash, create and join new room
       if (rooms.indexOf(data.room) <= 0) {
         socket.join(data.room);
       }
@@ -113,7 +107,7 @@ io.sockets.on("connection", (socket) => {
       // set player 1 pid to 1
       socket.pid = 1;
       socket.hash = generateHash(8);
-      // game logic begins
+      // game logic set
       game_logic.games[data.room] = {
         player1: socket,
         moves: 0,
@@ -130,51 +124,29 @@ io.sockets.on("connection", (socket) => {
       rooms.push(data.room);
       // sends signal to client side to assign pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
-      // console.log("assign called");
+      console.log(socket.hash);
     }
 
-    // socket.on("set_piece", (data) => {
-    //   let game = game_logic.games[socket.room];
-
-    //   socket.emit("move_made");
-
-    //   if ((data.hash = socket.hash && game.turn == socket.pid)) {
-    //   let move_made = game_logic.setPiece();
-    //   if (move_made) {
-    //     game.moves = parseInt(game.moves) + 1;
-    //     socket.broadcast.to(socket.room).emit("set_piece_test", {
-    //       pid: socket.pid,
-    //       target: data.targetDomObject,
-    //     });
-    //     game.turn = socket.opponent.pid;
-    //     let winner = game_logic.checkWinner(game.board);
-    //     if (winner) {
-    //       socket.send("winner");
-    //     }
-    //     if (game.moves >= 42) {
-    //       socket.send("draw");
-    //     }
-    //   }
-    //   }
-    // });
-
-    socket.on("makeMove", function (data) {
-      var game = game_logic.games[socket.room];
+    socket.on("setPiece", function (data) {
+      let game = game_logic.games[socket.room];
+      console.log(game.board);
+      // console.log("game turn: ", game.turn);
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
-        var move_made = game_logic.make_move(socket.room, data.col, socket.pid);
+        let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
         if (move_made) {
           game.moves = parseInt(game.moves) + 1;
           socket.broadcast
             .to(socket.room)
             .emit("move_made", { pid: socket.pid, col: data.col });
           game.turn = socket.opponent.pid;
-          var winner = game_logic.check_for_win(game.board);
+          let winner = game_logic.checkWinner(game.board);
+          // console.log("check for win");
           if (winner) {
-            // io.to(socket.room).emit('winner', {winner: winner});
+            io.to(socket.room).emit("winner", { winner: winner });
             socket.send("winner", { winner: winner });
           }
           if (game.moves >= 42) {
-            // io.to(socket.room).emit('draw');
+            io.to(socket.room).emit("draw");
             socket.send("draw");
           }
         }
@@ -183,8 +155,6 @@ io.sockets.on("connection", (socket) => {
 
     socket.on("my_move", (data) => {
       socket.broadcast.to(socket.room).emit("opponent_move", { col: data.col });
-      // socket.broadcast.to(socket.room).emit("opponent_move");
-      socket.broadcast("test");
     });
   });
 
@@ -196,7 +166,7 @@ io.sockets.on("connection", (socket) => {
       socket.send("stop");
       console.log("room closed: " + socket.room);
     } else {
-      console.log("disconnected");
+      console.log("disconnected from room");
     }
   });
 });
