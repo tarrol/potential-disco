@@ -79,7 +79,7 @@ router.get("/leaderboard", withAuth, async (req, res) => {
   }
 });
 
-router.get('/avatars', withAuth, async(req, res) => {
+router.get("/profile", withAuth, async (req, res) => {
   try {
     res.render("avatar", {
       user_id: req.session.user_id,
