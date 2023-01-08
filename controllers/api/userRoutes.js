@@ -3,6 +3,18 @@ const { User } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 //const findAvatar = require("../../scripts/avatar");
+router.get('/me', (req, res) => {
+  // Find the logged in user based on the userId in the session
+  User.findByPk(req.session.user_id)
+    .then(user => {
+      // Send the user data as a response
+      res.json(user);
+    })
+    .catch(error => {
+      // If an error occurs, send a 500 status code with the error message
+      res.status(500).send(error.message);
+    });
+});
 
 router.post("/", async (req, res) => {
   try {
@@ -47,6 +59,7 @@ router.post("/login", async (req, res) => {
     req.session.save(() => {
       req.session.user_id = userData.id;
       req.session.username = userData.username;
+      req.session.avatarurl = userData.avatar;
       req.session.logged_in = true;
 
       res.json({ user: userData, message: "You are now logged in!" });
@@ -66,7 +79,7 @@ router.post("/logouts", (req, res) => {
   }
 });
 
-router.put('/:id', withAuth , async (req, res) => {
+router.put('/me', withAuth , async (req, res) => {
   try {
     const [avatar] = await User.update(req.body.avatar, {
       where: {
