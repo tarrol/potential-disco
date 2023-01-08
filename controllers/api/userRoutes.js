@@ -79,7 +79,7 @@ router.post("/logouts", (req, res) => {
   }
 });
 
-router.put('/:id', withAuth , async (req, res) => {
+router.put('/me', withAuth , async (req, res) => {
   try {
     const [avatar] = await User.update(req.body.avatar, {
       where: {
