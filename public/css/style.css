@@ -496,4 +496,28 @@ nav{
 	position: relative;
 	display: inline-block;
 	width: 25%;
+} 
+
+
+#navig-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;  
+  list-style: none;
+  padding: 10;
+  margin: 10;
+}
+
+nav{
+  background-color: black;
+}
+
+.nav-item {
+  padding: 10px;
+
+}
+
+.nav-item > a{
+  color:white;
 }
