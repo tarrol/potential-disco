@@ -21,7 +21,7 @@ fetch('/api/users/me', {
 //  credentials: 'include' // include the cookies in the request
 })
   .then(response => {
-    console.log(response);
+    // console.log(response);
     if (response.ok) {
       return response.json();
     } else {
@@ -32,7 +32,9 @@ fetch('/api/users/me', {
     console.log(userData);
     // Create an image element using the userData.avatar URL
     const avatarImg = document.createElement('img');
+    const win = document.querySelector('#wins');
     avatarImg.src = userData.avatar;
+    win.textContent = userData.winCount;
 
     // Append the image to the body of the document
     document.querySelector('#avatar-section').appendChild(avatarImg);
