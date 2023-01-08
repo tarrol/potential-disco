@@ -130,13 +130,14 @@ $(() => {
     $(".status").html("");
   }
 
-  const myWin = async function () {
-    const response = await fetch("/api/users/:id", {});
+  // make a function to call wincount api route on win
+  // const myWin = async function () {
+  //   const response = await fetch("/api/users/:id", {});
 
-    if (response.ok) {
-      document.location.replace("/");
-    } else {
-      alert("Failed to login");
-    }
-  };
+  //   if (response.ok) {
+  //     document.location.replace("/");
+  //   } else {
+  //     alert("Failed to login");
+  //   }
+  // };
 });
