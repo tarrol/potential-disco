@@ -1,9 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const game_logic = require("./scripts/game_logic");
-require("dotenv").config();
+const game_logic = require("./public/js/game_logic");
+const routes = require("./controllers");
+const generateHash = require("./utils/generateHash");
+
 const path = require("path");
 const session = require("express-session");
 const exphbs = require("express-handlebars");
@@ -33,84 +36,67 @@ const sess = {
     db: sequelize,
   }),
 };
-
 app.use(session(sess));
+
+const hbs = exphbs.create({});
+
+app.engine("handlebars", hbs.engine);
+app.set("view engine", "handlebars");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", require("./controllers"));
+app.use(routes);
 
-// Handlebars setting
-app.set("view engine", "hbs");
-app.engine(
-  "hbs",
-  exphbs.engine({
-    extname: "hbs",
-    defaultLayout: "index",
-    layoutsDir: __dirname + "/views/layouts",
-    partialsDir: __dirname + "/views/partials",
-  })
-);
-
-app.get("/", (req, res) => {
-  res.render("main");
-});
-
-function generateRoom(length) {
-  let haystack =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let room = "";
-
-  for (let i = 0; i < length; i++) {
-    room += haystack.charAt(Math.floor(Math.random() * 62));
-  }
-
-  return room;
-}
-
-let games = {};
 let rooms = [];
-// let roomNo;
-// let clientNo = 0;
 
 io.sockets.on("connection", (socket) => {
-  // console.log("user connected", socket.id);
   socket.on("join", (data) => {
     // if there is already a room with player 1
     if (data.room in game_logic.games) {
       let game = game_logic.games[data.room];
-      // if there is already player 2 of that room
+      // if there is already player 2 of that room, return
       if (typeof game.player2 != "undefined") {
         return;
       }
       // otherwise join room as player 2
-      console.log("player 2 has logged on");
+      console.log("player 2 has logged on to room: ", data.room);
       socket.join(data.room);
+      // push updated room data into the rooms array list
       rooms.push(data.room);
+      // set socket.room attribute to callback room id in games array later
+      socket.room = data.room;
+      // set player 2 pid
       socket.pid = 2;
-      socket.hash = generateRoom(8);
+
+      // hash to track different players, socket.id isn't meant to be used in applications
+      socket.hash = generateHash(8);
       game.player2 = socket;
 
       // sets opponents for player 1 and player 2
       socket.opponent = game.player1;
       game.player1.opponent = socket;
+      // sends signal to client side to set pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
 
-      // begins game at turn 1
+      // begins at turn 1
       game.turn = 1;
-      socket.broadcast.to(data.room).emit("game start");
+      socket.broadcast.to(data.room).emit("start");
     } else {
       // join new room as player 1
-      console.log("player 1 has joined");
+      console.log("player 1 has joined room:", data.room);
+
+      // if there are no rooms with the generated hash, create and join new room
       if (rooms.indexOf(data.room) <= 0) {
         socket.join(data.room);
       }
+      // set socket room attribute (room id) to the response
       socket.room = data.room;
+      // set player 1 pid to 1
       socket.pid = 1;
-      socket.hash = generateRoom(8);
-      // game logic begins
+      socket.hash = generateHash(8);
+      // game logic set
       game_logic.games[data.room] = {
         player1: socket,
         moves: 0,
@@ -123,11 +109,13 @@ io.sockets.on("connection", (socket) => {
           [0, 0, 0, 0, 0, 0, 0],
         ],
       };
+      // push this room into the rooms array list
       rooms.push(data.room);
+      // sends signal to client side to assign pid and hash (on scripts.js)
       socket.emit("assign", { pid: socket.pid, hash: socket.hash });
     }
 
-    socket.on("setPiece", (data) => {
+    socket.on("setPiece", function (data) {
       let game = game_logic.games[socket.room];
       if ((data.hash = socket.hash && game.turn == socket.pid)) {
         let move_made = game_logic.setPiece(socket.room, data.col, socket.pid);
@@ -138,23 +126,34 @@ io.sockets.on("connection", (socket) => {
             .emit("move_made", { pid: socket.pid, col: data.col });
           game.turn = socket.opponent.pid;
           let winner = game_logic.checkWinner(game.board);
-          // if(winner)
+          // checks for winner from checkwinner function and emits winner to room
+          if (winner) {
+            io.to(socket.room).emit("winner", { winner: winner });
+          }
+          if (game.moves >= 42) {
+            io.to(socket.room).emit("draw");
+          }
         }
       }
+    });
+
+    socket.on("my_move", (data) => {
+      socket.broadcast.to(socket.room).emit("opponent_move", { col: data.col });
     });
   });
 
   socket.on("disconnect", () => {
+    // if this room exists, delete the room from array
     if (socket.room in game_logic.games) {
       delete game_logic.games[socket.room];
+      // send signal to socket "stop" listener (on scripts.js)
       socket.send("stop");
       console.log("room closed: " + socket.room);
     } else {
-      console.log("disconnected");
+      console.log("disconnected from room");
     }
   });
 });
-
 
 sequelize
   .sync()

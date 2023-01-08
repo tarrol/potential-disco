@@ -4,6 +4,20 @@ const withAuth = require("../../utils/auth");
 
 //const findAvatar = require("../../scripts/avatar");
 
+// not sure what this is for
+router.get("/me", (req, res) => {
+  // Find the logged in user based on the userId in the session
+  User.findByPk(req.session.user_id)
+    .then((user) => {
+      // Send the user data as a response
+      res.json(user);
+    })
+    .catch((error) => {
+      // If an error occurs, send a 500 status code with the error message
+      res.status(500).send(error.message);
+    });
+});
+
 router.post("/", async (req, res) => {
   try {
     const userData = await User.create(req.body);
@@ -47,6 +61,8 @@ router.post("/login", async (req, res) => {
     req.session.save(() => {
       req.session.user_id = userData.id;
       req.session.username = userData.username;
+      req.session.avatarurl = userData.avatar;
+      req.session.current_win_count = userData.win_count;
       req.session.logged_in = true;
 
       res.json({ user: userData, message: "You are now logged in!" });
@@ -56,7 +72,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logouts", (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
       res.status(204).end();
@@ -66,14 +82,14 @@ router.post("/logout", (req, res) => {
   }
 });
 
-router.put('/:id', withAuth , async (req, res) => {
+// needs work, id should be req.session.user_id
+router.put("/me", withAuth, async (req, res) => {
   try {
-    const [avatar] = await User.update(req.body.avatar, {
+    const avatar = await User.update(req.body.avatar, {
       where: {
         id: req.params.id,
       },
     });
-
 
     if (!avatar) {
       res.status(200).end();
@@ -81,14 +97,40 @@ router.put('/:id', withAuth , async (req, res) => {
       res.json({ message: "Successfully updated avatar." });
       return;
     }
-
-
   } catch (err) {
     res.status(400).json(err);
-   
   }
-})
+});
 
-router.put("/:id", withAuth, (req, res) => {});
+// add 1 to wincount using usermodel id number
+router.put("/:id", async (req, res) => {
+  try {
+    const userData = await User.increment(
+      { win_count: 1 },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    res.json(userData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// get route for user by id
+router.get("/:id", async (req, res) => {
+  try {
+    const userData = await User.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(userData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
 
 module.exports = router;

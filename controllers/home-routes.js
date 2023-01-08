@@ -1,18 +1,20 @@
 const router = require("express").Router();
 const { User } = require("../models/");
 const withAuth = require("../utils/auth");
-const { generateRoom } = require("../scripts/gen_room.js");
+const generateHash = require("../utils/generateHash");
 
 router.get("/", async (req, res) => {
   try {
-    res.render("main");
+    res.render("homepage", {
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
 router.get("/login", (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.logged_in) {
     res.redirect("/");
     return;
   }
@@ -20,35 +22,53 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/signup", (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.logged_in) {
     res.redirect("/");
     return;
   }
   res.render("signup");
 });
 
-
-router.get("/highscore", async (req, res) => {
-  try {
-    res.render("highscores");
-  } catch (err) {
-    res.redirect("/login");
-  }
-});
-
+// test routes for connection, room id is generated from random hash
 router.get("/play", withAuth, async (req, res) => {
   try {
-    window.location.replace("/" + generateRoom(6));
+    res.redirect("/" + generateHash(8));
   } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/:room([A-Za-z0-9]{8})", withAuth, async (req, res) => {
+  try {
+    res.render("game", {
+      user_id: req.session.user_id,
+    });
+  } catch (err) {
+    // alert not working?
+    // alert("You must login first to play!")
     res.redirect("/login");
   }
 });
 
-router.get("/play/:room([A-Za-z0-9]{6})", withAuth, (req, res) => {
+router.get("/leaderboard", withAuth, async (req, res) => {
   try {
-    res.render("game");
+    res.render("leaderboard", {
+      user_id: req.session.user_id,
+      logged_in: req.session.logged_in,
+    });
   } catch (err) {
-    res.redirect("/login");
+    res.redirect("login");
+  }
+});
+
+router.get("/avatars", withAuth, async (req, res) => {
+  try {
+    res.render("avatar", {
+      user_id: req.session.user_id,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.redirect("login");
   }
 });
 

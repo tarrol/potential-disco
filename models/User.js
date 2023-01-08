@@ -27,14 +27,15 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    winCount: {
+    win_count: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
     },
     avatar: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: "https://avatars.dicebear.com/api/bottts/fjfifj.svg",
     },
   },
   {
