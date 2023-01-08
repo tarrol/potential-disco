@@ -77,8 +77,9 @@ router.get("/:room([A-Za-z0-9]{8})", withAuth, async (req, res) => {
       layout: "index",
     });
   } catch (err) {
-    console.log(err);
-    // res.redirect("/login");
+    // alert not working?
+    // alert("You must login first to play!")
+    res.redirect("/login");
   }
 });
 

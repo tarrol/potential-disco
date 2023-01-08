@@ -3,14 +3,16 @@ const { User } = require("../../models");
 const withAuth = require("../../utils/auth");
 
 //const findAvatar = require("../../scripts/avatar");
-router.get('/me', (req, res) => {
+
+// not sure what this is for
+router.get("/me", (req, res) => {
   // Find the logged in user based on the userId in the session
   User.findByPk(req.session.user_id)
-    .then(user => {
+    .then((user) => {
       // Send the user data as a response
       res.json(user);
     })
-    .catch(error => {
+    .catch((error) => {
       // If an error occurs, send a 500 status code with the error message
       res.status(500).send(error.message);
     });
@@ -79,7 +81,8 @@ router.post("/logouts", (req, res) => {
   }
 });
 
-router.put('/me', withAuth , async (req, res) => {
+// needs work, id should be req.session.user_id
+router.put("/me", withAuth, async (req, res) => {
   try {
     const [avatar] = await User.update(req.body.avatar, {
       where: {
@@ -87,18 +90,14 @@ router.put('/me', withAuth , async (req, res) => {
       },
     });
 
-
     if (!avatar) {
       res.status(200).end();
     } else {
       res.json({ message: "Successfully updated avatar." });
       return;
     }
-
-
   } catch (err) {
     res.status(400).json(err);
-   
   }
 })
 

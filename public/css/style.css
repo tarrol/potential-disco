@@ -346,9 +346,9 @@ END NORMALIZE CSS
 */
 
 
-body{
-	background: #f2f2f2;
-	font-family: arial;
+body {
+  text-align: center;
+  background-color: rgb(57, 1, 104);
 }
 
 .board{
