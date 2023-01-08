@@ -119,6 +119,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// get route for user by id
 router.get("/:id", async (req, res) => {
   try {
     const userData = await User.findOne({
