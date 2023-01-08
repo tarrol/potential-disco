@@ -380,7 +380,6 @@ body {
 
 .yellow-piece {
   background-color: yellow;
-<<<<<<< HEAD
 }
 
 /* leaderboard*/
@@ -409,7 +408,6 @@ body {
 	position: relative;
 	display: inline-block;
 	width: 25%;
-=======
 } 
 
 
@@ -434,5 +432,4 @@ nav{
 
 .nav-item > a{
   color:white;
->>>>>>> a26e2e16438f8e6115fa7c13288ca68992f45d2b
 }
