@@ -34,7 +34,7 @@ User.init(
     },
     avatar: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       defaultValue: "https://avatars.dicebear.com/api/bottts/fjfifj.svg"
     },
   },
