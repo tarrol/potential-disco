@@ -529,3 +529,8 @@ img {
   left: 100px;
   top: 40px;
 }
+
+button {
+  width: 100px;
+  height: 20px;
+}

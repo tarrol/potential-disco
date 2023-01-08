@@ -21,13 +21,13 @@ fetch('/api/users/me', {
 //  credentials: 'include' // include the cookies in the request
 })
   .then(response => {
-    // console.log(response);
+    console.log(response);
     if (response.ok) {
       return response.json();
     } else {
       throw new Error(response.statusText);
     }
-  })
+})
   .then(userData => {
     console.log(userData);
     // Create an image element using the userData.avatar URL
@@ -38,17 +38,25 @@ fetch('/api/users/me', {
 
     // Append the image to the body of the document
     document.querySelector('#avatar-section').appendChild(avatarImg);
-  })
+})
   .catch(error => {
     console.error(error);
+});
+
+const editAvatarHandler = async function(event) {
+  event.preventDefault();
+
+  await fetch('/api/users/me', {
+    method: 'PUT',
+    //! body: add new link
+    headers: {
+      'Content-Type': 'application/json'
+    }
   });
 
-// var image = new Image();
-// image.src = ;
+  document.location.reload();
+};
 
-// document
-//   .querySelector('#avatar-section')
-//   .appendChild(image)
-//   .addEventListener('submit', getRandomAvatar(8));
+document.querySelector('#change-avatar').addEventListener("submit", getRandomAvatar(8));
 
-module.exports = getRandomAvatar;
+// module.exports = getRandomAvatar;
