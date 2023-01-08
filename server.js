@@ -129,11 +129,9 @@ io.sockets.on("connection", (socket) => {
           // checks for winner from checkwinner function and emits winner to room
           if (winner) {
             io.to(socket.room).emit("winner", { winner: winner });
-            socket.send("winner", { winner: winner });
           }
           if (game.moves >= 42) {
             io.to(socket.room).emit("draw");
-            socket.send("draw");
           }
         }
       }

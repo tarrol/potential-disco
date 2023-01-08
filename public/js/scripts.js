@@ -38,6 +38,8 @@ $(() => {
     change_turn(false);
     if (data.winner.winner == player.pid) {
       $(".status").html(text.win);
+      myWin();
+      console.log("myWin called");
       $("#play-button").text("Play Again");
     } else {
       $(".status").html(text.lose);
@@ -127,4 +129,14 @@ $(() => {
     oc.removeClass("yellow-piece red-piece");
     $(".status").html("");
   }
+
+  const myWin = async function () {
+    const response = await fetch("/api/users/:id", {});
+
+    if (response.ok) {
+      document.location.replace("/");
+    } else {
+      alert("Failed to login");
+    }
+  };
 });

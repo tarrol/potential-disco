@@ -62,6 +62,7 @@ router.post("/login", async (req, res) => {
       req.session.user_id = userData.id;
       req.session.username = userData.username;
       req.session.avatarurl = userData.avatar;
+      req.session.current_win_count = userData.win_count;
       req.session.logged_in = true;
 
       res.json({ user: userData, message: "You are now logged in!" });
@@ -84,7 +85,7 @@ router.post("/logouts", (req, res) => {
 // needs work, id should be req.session.user_id
 router.put("/me", withAuth, async (req, res) => {
   try {
-    const [avatar] = await User.update(req.body.avatar, {
+    const avatar = await User.update(req.body.avatar, {
       where: {
         id: req.params.id,
       },
@@ -101,10 +102,34 @@ router.put("/me", withAuth, async (req, res) => {
   }
 });
 
-// router.put("/score/:id", withAuth, (req, res) => {
-//   try {
-//     const wins = await User.findByPk()
-//   }
-// });
+// add 1 to wincount using usermodel id number
+router.put("/:id", async (req, res) => {
+  try {
+    const userData = await User.increment(
+      { win_count: 1 },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    res.json(userData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const userData = await User.findOne({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(userData);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
 
 module.exports = router;
