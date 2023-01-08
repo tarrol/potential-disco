@@ -1,5 +1,6 @@
 let games = {};
 
+// sets your player piece with socket room no, col parameter and current pid turn in mind
 let setPiece = function (room, col, pid) {
   let board = this.games[room].board;
   let move_made = false;
@@ -15,11 +16,12 @@ let setPiece = function (room, col, pid) {
 
 let checkWinner = function (board) {
   let found = 0,
-    winner_coins = [],
+    // winner default false on game reset
     winner = false,
     data = {},
     person = 0;
-  /*horizontal*/
+
+  // win conditions for horizontal, vertical, diagonal left, diagonal right
   for (let row = 0; row < board.length; row++) {
     if (winner) break;
     found = 0;
@@ -30,14 +32,11 @@ let checkWinner = function (board) {
       person = selected;
       if (found >= 4) {
         winner = person;
-        for (let k = 0; k < 4; k++) {
-          winner_coins[k] = row + "" + (col - k);
-        }
       }
       if ((col > 2 && found == 0) || found >= 4) break;
     }
   }
-  /*vertical*/
+
   if (!winner) {
     for (col = 0; col < board[0].length; col++) {
       if (winner) break;
@@ -49,15 +48,12 @@ let checkWinner = function (board) {
         person = selected;
         if (found >= 4) {
           winner = person;
-          for (let k = 0; k < 4; k++) {
-            winner_coins[k] = row - k + "" + col;
-          }
         }
         if ((row > 1 && found == 0) || found >= 4) break;
       }
     }
   }
-  /*diagonal left-up->right*/
+
   if (!winner) {
     for (col = 0; col < board[0].length - 3; col++) {
       if (winner) break;
@@ -70,18 +66,12 @@ let checkWinner = function (board) {
           first_val === board[row + 3][col + 3]
         ) {
           winner = first_val;
-          winner_coins = [
-            row + "" + col,
-            row + 1 + "" + (col + 1),
-            row + 2 + "" + (col + 2),
-            row + 3 + "" + (col + 3),
-          ];
           break;
         }
       }
     }
   }
-  /*diagonal right-up->left*/
+
   if (!winner) {
     for (col = board[0].length - 1; col > 2; col--) {
       if (winner) break;
@@ -94,12 +84,6 @@ let checkWinner = function (board) {
           first_val === board[row + 3][col - 3]
         ) {
           winner = first_val;
-          winner_coins = [
-            row + "" + col,
-            row + 1 + "" + (col - 1),
-            row + 2 + "" + (col - 2),
-            row + 3 + "" + (col - 3),
-          ];
           break;
         }
       }
@@ -108,7 +92,6 @@ let checkWinner = function (board) {
 
   if (winner) {
     data.winner = winner;
-    data.winner_coins = winner_coins;
     return data;
   }
   return false;
