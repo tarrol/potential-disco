@@ -21,23 +21,20 @@ $(() => {
     player.pid = data.pid;
     player.hash = data.hash;
     if (player.pid == "1") {
-      mc.addClass("red");
-      oc.addClass("yellow");
-      player.color = "red";
-      player.oppColor = "yellow";
+      mc.addClass("red-piece");
+      oc.addClass("yellow-piece");
+      player.color = "red-piece";
+      player.oppColor = "yellow-piece";
     } else {
       $(".status").html(text.opponent_turn);
-      mc.addClass("yellow");
-      oc.addClass("red");
-      oc.addClass("display");
-      player.color = "yellow";
-      player.oppColor = "red";
+      mc.addClass("yellow-piece");
+      oc.addClass("red-piece");
+      player.color = "yellow-piece";
+      player.oppColor = "red-piece";
     }
   });
 
   socket.on("winner", function (data) {
-    oc.removeClass("display");
-    mc.removeClass("display");
     change_turn(false);
     if (data.winner.winner == player.pid) {
       $(".status").html(text.win);
@@ -47,15 +44,12 @@ $(() => {
   });
 
   socket.on("draw", function () {
-    oc.removeClass("display");
-    mc.removeClass("display");
     change_turn(false);
     $(".status").html(text.draw);
   });
 
   socket.on("start", function (data) {
     change_turn(true);
-    mc.addClass("display");
   });
 
   socket.on("stop", function (data) {
@@ -66,8 +60,6 @@ $(() => {
   socket.on("move_made", function (data) {
     setPiece(data.col + 1, true);
     change_turn(true);
-    mc.addClass("display");
-    oc.removeClass("display");
   });
 
   socket.on("opponent_move", function (data) {
@@ -84,8 +76,6 @@ $(() => {
         setPiece(col);
         socket.emit("setPiece", { col: col - 1, hash: player.hash });
         change_turn(false);
-        mc.removeClass("display");
-        oc.addClass("display");
       }
     }
   });
@@ -131,10 +121,8 @@ $(() => {
 
   function reset_board() {
     $(".cols .col").attr("data-in-col", "0").html("");
-    mc.removeClass("yellow red");
-    oc.removeClass("yellow red");
-    mc.removeClass("display");
-    oc.removeClass("display");
+    mc.removeClass("yellow-piece red-piece");
+    oc.removeClass("yellow-piece red-piece");
     $(".status").html("");
   }
 });
