@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logouts", (req, res) => {
+router.post("/logout", (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
       res.status(204).end();
@@ -87,7 +87,7 @@ router.put("/me", withAuth, async (req, res) => {
   try {
     const avatar = await User.update(req.body.avatar, {
       where: {
-        id: req.params.id,
+        id: req.session.user_id,
       },
     });
 
@@ -102,24 +102,39 @@ router.put("/me", withAuth, async (req, res) => {
   }
 });
 
-// add 1 to wincount using usermodel id number
+// route to increment user wincount by 1
 router.put("/:id", async (req, res) => {
   try {
     const userData = await User.increment(
       { win_count: 1 },
       {
         where: {
-          id: req.params.id,
+          id: req.session.user_id,
         },
       }
     );
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
+// routes for testing
+// get your user info
+router.get("/user", async (req, res) => {
+  try {
+    const userData = await User.findOne({
+      where: {
+        id: req.session.user_id,
+      },
+    });
     res.json(userData);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// get route for user by id
+// get user info by id
 router.get("/:id", async (req, res) => {
   try {
     const userData = await User.findOne({

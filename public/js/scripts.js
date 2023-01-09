@@ -1,3 +1,27 @@
+let sfxClick = new Audio("sfx/click-sfx.mp3");
+let sfxWin = new Audio("sfx/win-sfx.mp3");
+let sfxLose1 = new Audio("sfx/lose1.mp3");
+let sfxLose2 = new Audio("sfx/lose2.mp3");
+let sfxLose3 = new Audio("sfx/lose3.mp3");
+let sfxLose4 = new Audio("sfx/lose4.mp3");
+let sfxLose5 = new Audio("sfx/lose5.mp3");
+let sfxLose6 = new Audio("sfx/sad-meme-sfx.mp3");
+
+sfxWin.volume = 0.8;
+sfxLose1.volume = 0.5;
+sfxLose2.volume = 0.3;
+sfxLose3.volume = 1;
+sfxLose4.volume = 0.7;
+sfxLose5.volume = 0.5;
+sfxLose6.volume = 0.3;
+
+function randomizeLoss() {
+  let lossArray = [sfxLose1, sfxLose2, sfxLose3, sfxLose4, sfxLose5, sfxLose6];
+  let rng = Math.floor(Math.random() * 6);
+
+  lossArray[rng - 1].play();
+}
+
 $(() => {
   let socket = io.connect(),
     player = {},
@@ -39,11 +63,12 @@ $(() => {
     if (data.winner.winner == player.pid) {
       $(".status").html(text.win);
       myWin();
-      console.log("myWin called");
+      sfxWin.play();
       $("#play-button").text("Play Again");
     } else {
       $(".status").html(text.lose);
       $("#play-button").text("Play Again");
+      randomizeLoss();
     }
   });
 
@@ -78,6 +103,7 @@ $(() => {
       if (your_turn) {
         let col = $(this).index() + 1;
         setPiece(col);
+        sfxClick.play();
         socket.emit("setPiece", { col: col - 1, hash: player.hash });
         change_turn(false);
       }
@@ -131,13 +157,18 @@ $(() => {
   }
 
   // make a function to call wincount api route on win
-  // const myWin = async function () {
-  //   const response = await fetch("/api/users/:id", {});
+  const myWin = async function () {
+    const response = await fetch("/api/users/:id", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  //   if (response.ok) {
-  //     document.location.replace("/");
-  //   } else {
-  //     alert("Failed to login");
-  //   }
-  // };
+    if (response.ok) {
+      console.log("wincount incremented");
+    } else {
+      console.log("wincount call failed");
+    }
+  };
 });

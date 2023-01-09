@@ -42,6 +42,7 @@ router.get("/:room([A-Za-z0-9]{8})", withAuth, async (req, res) => {
   try {
     res.render("game", {
       user_id: req.session.user_id,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
     // alert not working?
@@ -52,16 +53,24 @@ router.get("/:room([A-Za-z0-9]{8})", withAuth, async (req, res) => {
 
 router.get("/leaderboard", withAuth, async (req, res) => {
   try {
+    const dbUserData = await User.findAll({
+      order: [["win_count", "DESC"]],
+    });
+
+    const users = dbUserData.map((user) => user.get({ plain: true }));
+
     res.render("leaderboard", {
+      users,
       user_id: req.session.user_id,
-      logged_in: req.session.logged_in,
+      loggedIn: req.session.loggedIn,
     });
   } catch (err) {
-    res.redirect("login");
+    console.log(err);
+    res.status(500).json(err);
   }
 });
 
-router.get("/avatars", withAuth, async (req, res) => {
+router.get("/profile", withAuth, async (req, res) => {
   try {
     res.render("avatar", {
       user_id: req.session.user_id,
