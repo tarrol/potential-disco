@@ -62,7 +62,7 @@ router.get("/leaderboard", withAuth, async (req, res) => {
     res.render("leaderboard", {
       users,
       user_id: req.session.user_id,
-      loggedIn: req.session.loggedIn,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
     console.log(err);
