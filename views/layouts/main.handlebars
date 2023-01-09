@@ -4,42 +4,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Definitely Not Connect 4</title>
-    <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
   <body class="flex-column min-100-vh">
-    <nav class="navbar">
-      <ul id="navig-bar">
-        <li class="li-inline nav-item"><a href="/">Home</a></li>
-        <li class="li-inline nav-item"><a
-            href="/leaderboard"
-          >Leaderboards</a></li>
-        {{#unless logged_in}}
-          <li class="li-inline nav-item"><a href="/login">Login</a></li>
-          <li class="li-inline nav-item"><a href="/signup">Signup</a></li>
-        {{else}}
-          <li class="li-inline nav-item"><a href="/profile">Profile</a></li>
-          <li class="li-inline nav-item"><a
-              href="/"
-              id="logout-link"
-            >Logout</a></li>
-        {{/unless}}
-      </ul>
-    </nav>
-    <header class="hero">
-      <h1 class="app-title"><a href="/play" id="play-button">Connect 4 Game</a></h1>
-    </header>
+  <nav class="navbar">
+    <ul id="navig-bar">
+      <li class="li-inline nav-item"><a href="/">Home</a></li>
+      <li class="li-inline nav-item"><a href="/leaderboard">Dashboard</a></li>
+      {{#unless logged_in}}
+      <li class="li-inline nav-item"><a href="/login">Login</a></li>
+      <li class="li-inline nav-item"><a href="/signup">Signup</a></li>
+      {{else}}
+      <li class="li-inline nav-item"><a href="/" id="logout-link">Logout</a></li>
+      {{/unless}}
+    </ul>
+  </nav>
+  <header class="hero">
+    <a href="/play"><button class="app-title" id="play-button">Start A New Game</button></a>
+  </header>
 
-    {{{body}}}
+  {{{body}}}
 
-    <script
-      src="https://code.jquery.com/jquery-3.6.3.min.js"
-      integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
-      crossorigin="anonymous"
-    ></script>
-    <script src="/js/logout.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/scripts.js" type="text/javascript"></script>
+ <script
+  src="https://code.jquery.com/jquery-3.6.3.min.js"
+  integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/scripts.js" type="text/javascript"></script>
   </body>
 </html>
