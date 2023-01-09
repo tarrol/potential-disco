@@ -13,7 +13,7 @@ function getRandomAvatar(length) {
 
   generatedAvatar = avatarUrl + avatarCode + ".svg";
 
-  console.log(generatedAvatar);
+  // console.log(generatedAvatar);
   return generatedAvatar;
 }
 
@@ -74,6 +74,7 @@ const editAvatarHandler = async function (event) {
 
   const response = await fetch('/api/users/me', {
     method: "PUT",
+    // body: {avatar: generatedAvatar},
     headers: {
       "Content-Type": "application/json",
     },
@@ -81,6 +82,7 @@ const editAvatarHandler = async function (event) {
   
   if(response.ok) {
     console.log("avatar updated");
+    console.log(generatedAvatar);
   } else {
     console.log("avatar update failed");
   }
