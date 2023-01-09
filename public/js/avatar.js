@@ -34,9 +34,10 @@ fetch("/api/users/me", {
     // Create an image element using the userData.avatar URL
     const avatarImg = document.createElement("img");
     const win = document.querySelector("#wins");
-    const currentName = document.querySelector("#current-username");
+    const currentName = document.getElementById("current-username");
     avatarImg.src = userData.avatar;
-    win.textContent = userData.winCount;
+    avatarImg.classList.add("avatar-icon");
+    win.textContent = userData.win_count;
     currentName.textContent = userData.username;
 
     // Append the image to the body of the document
@@ -46,24 +47,43 @@ fetch("/api/users/me", {
     console.error(error);
   });
 
+// const editAvatarHandler = async function (event) {
+//   event.preventDefault();
+
+//   getRandomAvatar(8);
+
+//   await fetch("/api/users/me", {
+//     method: "PUT",
+//     body: JSON.stringify({
+//       avatar: generatedAvatar,
+//     }),
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then((response) => response.json())
+//     .then((data) => console.log(data));
+
+//   document.location.reload();
+// };
+
 const editAvatarHandler = async function (event) {
   event.preventDefault();
 
   getRandomAvatar(8);
 
-  await fetch("/api/users/me", {
+  const response = await fetch('/api/users/me', {
     method: "PUT",
-    body: JSON.stringify({
-      avatar: generatedAvatar,
-    }),
     headers: {
       "Content-Type": "application/json",
     },
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data));
-
-  // document.location.reload();
+  });
+  
+  if(response.ok) {
+    console.log("avatar updated");
+  } else {
+    console.log("avatar update failed");
+  }
 };
 
 const button = document.querySelector("div > button");
