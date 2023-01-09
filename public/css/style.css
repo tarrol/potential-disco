@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
 body {
   text-align: center;
   background-color: rgb(50, 74, 95, .3);
@@ -154,14 +156,14 @@ nav{
 .nav-item > a{
   color: rgb(224, 221, 240);
 }
-
+/* 
 img {
   height: 230px;
   display: flex;
   position: relative;
   left: 100px;
   top: 40px;
-}
+} */
 
 #game-board {
   height: 100%;
@@ -193,3 +195,42 @@ img {
 #login-form>div{
   margin-bottom: 5px;
 }
+
+.leaderboard-avatar{
+	height: 40px;
+	width: 40px;
+}
+
+.lbd-card{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.lbd-card>a{
+	margin: 0px 0px 0px 7px;
+	font-size: 20px;
+}
+
+#avatar-info {
+	font-family: 'Courgette', cursive;
+	font-size: 50px;
+	/* display: flex; */
+}
+
+.avatar-icon {
+  height: 230px;
+  display: flex;
+  position: relative;
+  left: 100px;
+  top: 40px;
+}
+
+/* #change-avatar {
+	font-size: 10px;
+	font-weight: bolder;
+	width: 100px;
+	height: 30px;
+	border-radius: 50px;
+} */

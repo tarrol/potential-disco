@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logouts", (req, res) => {
   if (req.session.logged_in) {
     req.session.destroy(() => {
       res.status(204).end();
@@ -83,9 +83,9 @@ router.post("/logout", (req, res) => {
 });
 
 // needs work, id should be req.session.user_id
-router.put("/me", withAuth, async (req, res) => {
+router.put("/avatar/:id", async (req, res) => {
   try {
-    const avatar = await User.update(req.body.avatar, {
+    const avatar = await User.update(req.body, {
       where: {
         id: req.session.user_id,
       },
