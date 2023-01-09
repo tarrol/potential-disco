@@ -18,8 +18,6 @@ html {
  * Remove the margin in all browsers.
  */
 body {
-  text-align: center;
-  background-color: aqua;
   margin: 0;
 }
 
@@ -412,57 +410,26 @@ body {
 	background: rgb(255, 230, 0);
 }
 
-.hidden{
-	display: none;
+/* leaderboard*/
+
+#container {
+	width: 600px;
+	height: auto;
 }
 
-/* status bar to display turn or if player 2 is connected */
-.status{
-	position: absolute;
-	bottom: -40px;
+.row {
+	position: relative;
+	display: block;
 	width: 100%;
-	text-align: center;
-	line-height: 40px;
-	font-size: 20px;
-	color: #fff;
-	background-color: #e64;
-	border-radius: 0 0 10px 10px;
+	height: 40px;
+	border-bottom: 1px solid #AFAFAF;
 }
 
-/* status bar to display turn or if player 2 is connected */
-.status{
-	position: absolute;
-	bottom: -40px;
-	width: 100%;
-	text-align: center;
-	line-height: 40px;
-	font-size: 20px;
-	color: #fff;
-	background-color: #e64;
-	border-radius: 0 0 10px 10px;
-}
-
-#navig-bar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;  
-  list-style: none;
-  padding: 10;
-  margin: 10;
-}
-
-nav{
-  background-color: black;
-}
-
-.nav-item {
-  padding: 10px;
-
-}
-
-.nav-item > a{
-  color:white;
+.name {
+	position: relative;
+	display: inline-block;
+	width: 75%;
+	line-height: 45px;
 }
 
 .yellow-piece {
@@ -497,6 +464,18 @@ nav{
 	width: 25%;
 } 
 
+/* status bar to display turn or if player 2 is connected */
+.status{
+	position: absolute;
+	bottom: -40px;
+	width: 100%;
+	text-align: center;
+	line-height: 40px;
+	font-size: 20px;
+	color: #fff;
+	background-color: #e64;
+	border-radius: 0 0 10px 10px;
+}
 
 #navig-bar {
   display: flex;
