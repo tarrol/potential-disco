@@ -154,14 +154,14 @@ nav{
 .nav-item > a{
   color: rgb(224, 221, 240);
 }
-
+/* 
 img {
   height: 230px;
   display: flex;
   position: relative;
   left: 100px;
   top: 40px;
-}
+} */
 
 #game-board {
   height: 100%;
@@ -195,8 +195,18 @@ img {
 }
 
 .leaderboard-avatar{
-	height: 30px;
-	width: 30px;
-	position: relative;
-	bottom:10px;
+	height: 40px;
+	width: 40px;
+}
+
+.lbd-card{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.lbd-card>a{
+	margin: 0px 0px 0px 7px;
+	font-size: 20px;
 }
