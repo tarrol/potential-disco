@@ -193,3 +193,10 @@ img {
 #login-form>div{
   margin-bottom: 5px;
 }
+
+.leaderboard-avatar{
+	height: 30px;
+	width: 30px;
+	position: relative;
+	bottom:10px;
+}
