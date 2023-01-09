@@ -85,6 +85,7 @@ const editAvatarHandler = async function (event) {
 
   if (response.ok) {
     console.log("avatar updated");
+    document.location.reload();
   } else {
     console.log("avatar update failed");
   }
