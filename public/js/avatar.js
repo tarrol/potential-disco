@@ -70,16 +70,20 @@ fetch("/api/users/me", {
 const editAvatarHandler = async function (event) {
   event.preventDefault();
 
-  getRandomAvatar(8);
+  let generatedAvatar = getRandomAvatar(8);
+  console.log(generatedAvatar, "generated avatar");
 
-  const response = await fetch('/api/users/me', {
+  const response = await fetch("/api/users/avatar/:id", {
     method: "PUT",
+    body: JSON.stringify({
+      avatar: generatedAvatar,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
   });
-  
-  if(response.ok) {
+
+  if (response.ok) {
     console.log("avatar updated");
   } else {
     console.log("avatar update failed");

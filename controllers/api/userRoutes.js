@@ -83,9 +83,9 @@ router.post("/logouts", (req, res) => {
 });
 
 // needs work, id should be req.session.user_id
-router.put("/me", withAuth, async (req, res) => {
+router.put("/avatar/:id", async (req, res) => {
   try {
-    const avatar = await User.update(req.body.avatar, {
+    const avatar = await User.update(req.body, {
       where: {
         id: req.session.user_id,
       },
@@ -118,7 +118,6 @@ router.put("/:id", async (req, res) => {
     res.status(400).json(err);
   }
 });
-
 
 // routes for testing
 // get your user info
