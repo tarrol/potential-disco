@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const game_logic = require("./public/js/game_logic");
 const routes = require("./controllers");
 const generateHash = require("./utils/generateHash");
+const PORT = process.env.PORT || 3001;
 
 const path = require("path");
 const session = require("express-session");
@@ -158,6 +159,6 @@ io.sockets.on("connection", (socket) => {
 sequelize
   .sync()
   .then(() =>
-    httpServer.listen(3001, () => console.log("App listening on port 3001"))
+    httpServer.listen(PORT, () => console.log("App listening on port 3001"))
   )
   .catch((err) => console.error(err));

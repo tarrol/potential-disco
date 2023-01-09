@@ -1,1 +1,3 @@
-CONNECTION_URI=mysql://root:rootroot@localhost/connect4_db
+DB_NAME = "connect4_db"
+DB_USER = "root"
+DB_PW = "rootroot"
